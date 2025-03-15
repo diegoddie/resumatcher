@@ -16,8 +16,13 @@ import { fileSchema } from "@/lib/schemas/fileSchema";
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import axios from "axios";
+import { toast } from "sonner"
+import { useAuth } from "@clerk/nextjs";
 
 function UploadCv() {
+  const { userId } = useAuth();
+  
   const steps = [0, 1, 2, 3];
   const [currentStep, setCurrentStep] = useState(0);
   const [file, setFile] = useState<File | null>(null);
@@ -56,22 +61,47 @@ function UploadCv() {
     setCurrentStep(1);
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
+    console.log("ok")
+    if (!file) return;
+    
     setIsUploading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsUploading(false);
-      // Mock data from backend
-      setCvData({
-        role: "Software Engineer",
-        experience_years: 3,
-        location: "San Francisco, CA",
-        skills: ["JavaScript", "React", "Node.js"],
-        summary: "I am a software engineer with 3 years of experience in the industry",
+    
+    // Create FormData object to send the file
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('user_id', userId || "");
+    
+    try {
+      // Make API call to the backend
+      const response = await axios.post('http://localhost:8000/summarize', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-      // Move to step 2 after upload is complete
+
+      const cvData: CVData = response.data;
+    
+      setCvData(cvData);
+      toast.success("CV uploaded successfully, please review the data before confirming.")
+
       setCurrentStep(currentStep + 1);
-    }, 2000);
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        toast.warning(`Error: ${err.response.data.detail}`, {
+          action: {
+            label: 'Upgrade to Pro',
+            onClick: () => {
+              router.push('/account');
+            }
+          }
+        });
+      } else {
+        toast.warning("An unexpected error occurred. Please try again.")
+      }
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleCvDataChange = (updatedCvData: CVData) => {
