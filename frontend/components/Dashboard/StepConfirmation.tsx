@@ -109,18 +109,18 @@ function StepConfirmation({
                 {isEditing ? (
                   <Input
                     type="number"
-                    value={editedData.experience_years}
+                    value={editedData.years_experience}
                     onChange={(e) =>
                       setEditedData({
                         ...editedData,
-                        experience_years: Number.parseInt(e.target.value) || 0,
+                        years_experience: Number.parseInt(e.target.value) || 0,
                       })
                     }
                     placeholder="Years of experience"
                   />
                 ) : (
                   <p className="text-xl text-muted-foreground">
-                    {cvData.experience_years} years
+                    {cvData.years_experience} years
                   </p>
                 )}
               </div>

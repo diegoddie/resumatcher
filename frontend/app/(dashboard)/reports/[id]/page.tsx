@@ -1,91 +1,99 @@
-import JobPostCardItem from "@/components/Dashboard/JobPostCardItem";
+'use client'
 
-function page() {
-    const item = [
-        {
-            id: "1",
-            role: "Software Engineer",
-            company: "Google",
-            location: "Milan",
-            description: "We are looking for a software engineer with 3 years of experience in React and Node.js.",
-            matchScore: 95,
-            requirements: ["React", "Node.js", "Typescript"],
-            salary: "35.000€ - 45.000€",
-            url: "https://www.google.com"
-        },
-        {
-            id: "2",
-            role: "Full Stack Developer",
-            company: "Facebook",
-            location: "Brescia",
-            description: "We are looking for a full stack developer with 3 years of experience in React and Node.js.",
-            matchScore: 65,
-            requirements: ["PHP", "Laravel", "Docker"],
-            url: "https://www.facebook.com"
-        },
-        {
-            id: "3",
-            role: "Backend Developer",
-            company: "Amazon",
-            location: "Rome",
-            description: "We are looking for a backend developer with 3 years of experience in Python and Django.",
-            matchScore: 80,
-            requirements: ["Python", "Django", "PostgreSQL"],
-            salary: "40.000€ - 50.000€",
-            url: "https://www.amazon.com",
-          },
-          {
-            id: "4",
-            role: "Data Scientist",
-            company: "Microsoft",
-            location: "Turin",
-            description: "We are looking for a data scientist with expertise in machine learning and data analysis.",
-            matchScore: 88,
-            requirements: ["Python", "TensorFlow", "SQL"],
-            salary: "45.000€ - 55.000€",
-            url: "https://www.microsoft.com",
-          },
-          {
-            id: "5",
-            role: "Frontend Engineer",
-            company: "Spotify",
-            location: "Bologna",
-            description: "We are looking for a frontend engineer specialized in React and UI/UX design.",
-            matchScore: 72,
-            requirements: ["React", "Next.js", "Figma"],
-            salary: "30.000€ - 40.000€",
-            url: "https://www.spotify.com",
-          },
-          {
-            id: "6",
-            role: "Cloud Engineer",
-            company: "IBM",
-            location: "Florence",
-            description: "We are looking for a cloud engineer with experience in AWS and Kubernetes.",
-            matchScore: 78,
-            requirements: ["AWS", "Kubernetes", "Terraform"],
-            salary: "50.000€ - 60.000€",
-            url: "https://www.ibm.com",
-          },
-    ]
-    
-  return (
-    <div className="p-5 md:p-9">
-      <div className="flex flex-col space-y-7 md:space-y-9">
-        <div className="flex flex-col space-y-1">
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-            Job Report
-          </h1>
-          <p className="text-muted-foreground">
-            View your job reports and analytics.
-          </p>
+import JobPostCardItem from "@/components/Dashboard/JobPostCardItem";
+import { useQuery, useQueries } from "@tanstack/react-query";
+import { getJobPostsForReport, getMatchScoreForJobPost, getUserSubscription } from "@/utils/supabase/actions/userActions";
+import { useUser } from "@clerk/nextjs";
+import { Loader2 } from "lucide-react";
+import { useParams } from "next/navigation";
+import { useMemo } from "react";
+
+const JobPost = () => {
+    const params = useParams();
+    const { user } = useUser();
+
+    const reportId = Array.isArray(params.id) ? params.id[0] : params.id || "";
+
+    // Otteniamo l'abbonamento dell'utente per verificare se è pro
+    const { data: subscription } = useQuery({
+        queryKey: ["subscription", user?.id],
+        queryFn: () => getUserSubscription({ id: user?.id || "" }),
+        enabled: !!user?.id,
+    });
+
+    const isPro = subscription?.plan === "pro";
+
+    const { data: jobPosts, isLoading, isError } = useQuery({
+        queryKey: ["jobPosts", reportId],
+        queryFn: () => getJobPostsForReport({ reportId }),
+        enabled: !!reportId,
+    });
+
+    const matchScoreQueries = useQueries({
+        queries: jobPosts?.map((jobPost) => ({
+            queryKey: ["matchScore", jobPost.id, reportId],
+            queryFn: () => getMatchScoreForJobPost({
+                jobPostId: jobPost.id,
+                jobReportId: reportId,
+                userId: user?.id || ""
+            }),
+            enabled: !!jobPost.id && !!reportId && !!user?.id,
+        })) || [],
+    });
+
+    // Verifica se tutte le query match score sono ancora in caricamento
+    const isLoadingScores = matchScoreQueries.some(query => query.isLoading);
+
+    // Combiniamo i job posts con i match scores
+    const jobsWithScores = useMemo(() => {
+        if (!jobPosts || isLoadingScores) return [];
+        return jobPosts.map((jobPost, index) => ({
+            jobPost,
+            matchScore: matchScoreQueries[index]?.data?.score ?? 0,
+            isBlurred: !isPro && index >= 3, // Non blurrare se l'utente è pro
+        }));
+    }, [jobPosts, matchScoreQueries, isLoadingScores, isPro]);
+
+    if (!reportId) {
+        return (
+            <div className="flex items-center justify-center">
+                <p className="text-red-500">Error: Report ID is missing.</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="p-5 md:p-9">
+            <div className="flex flex-col space-y-7 md:space-y-9">
+                <div className="flex flex-col space-y-1">
+                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+                        Job Report
+                    </h1>
+                    <p className="text-muted-foreground">
+                        View your job reports and analytics.
+                    </p>
+                </div>
+                {isLoading || isLoadingScores ? (
+                    <div className="flex items-center justify-center">
+                        <Loader2 className="animate-spin" />
+                    </div>
+                ) : isError ? (
+                    <div className="flex items-center justify-center">
+                        <p className="text-red-500">Error loading job posts</p>
+                    </div>
+                ) : (
+                    jobsWithScores.map(({ jobPost, matchScore, isBlurred }) => (
+                        <JobPostCardItem
+                            key={jobPost.id}
+                            jobPost={jobPost}
+                            isBlurred={isBlurred}
+                            matchScore={matchScore}
+                        />
+                    ))
+                )}
+            </div>
         </div>
-        {item.map((item, index) => (
-            <JobPostCardItem key={item.id} item={item} isBlurred={index >= 2} />
-        ))}
-    </div>
-    </div>
-  );
+    );
 }
 
-export default page;
+export default JobPost;

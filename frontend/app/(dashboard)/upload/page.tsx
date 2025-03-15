@@ -13,15 +13,35 @@ import {
 } from "@/components/ui/stepper";
 import { CVData } from "@/lib/schemas/cvDataSchema";
 import { fileSchema } from "@/lib/schemas/fileSchema";
-import { Sparkles } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner"
-import { useAuth } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getUserSubscription } from "@/utils/supabase/actions/userActions";
 
 function UploadCv() {
-  const { userId } = useAuth();
+  const { user } = useUser();
+  const queryClient = useQueryClient();
+
+  const {
+    data: subscription,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["subscription", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      return getUserSubscription({ id: user.id });
+    },
+    enabled: !!user?.id,
+  });
+
+  const isPro = subscription?.plan === "pro";
+  const creditsLeft = subscription?.credits ?? 0;
+  const showCreditsLoading = isLoading || !user?.id;
   
   const steps = [0, 1, 2, 3];
   const [currentStep, setCurrentStep] = useState(0);
@@ -30,7 +50,6 @@ function UploadCv() {
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
-  // Dynamic titles and descriptions based on current step
   const stepTitles = [
     "Upload Your CV",
     "Confirm Your File",
@@ -62,18 +81,15 @@ function UploadCv() {
   };
 
   const handleUpload = async () => {
-    console.log("ok")
     if (!file) return;
     
     setIsUploading(true);
     
-    // Create FormData object to send the file
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('user_id', userId || "");
+    formData.append('user_id', user?.id || "");
     
     try {
-      // Make API call to the backend
       const response = await axios.post('http://localhost:8000/summarize', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -81,9 +97,9 @@ function UploadCv() {
       });
 
       const cvData: CVData = response.data;
-    
+
       setCvData(cvData);
-      toast.success("CV uploaded successfully, please review the data before confirming.")
+      toast.success("CV analyzed successfully by AI, please review the data before confirming.")
 
       setCurrentStep(currentStep + 1);
     } catch (err) {
@@ -108,13 +124,46 @@ function UploadCv() {
     setCvData(updatedCvData);
   };
 
-  const handleConfirm = () => {
-    // Move to step 3
+  const handleConfirm = async() => {
+    if (!cvData) return;
+    if (!file) return;
+
     setCurrentStep(currentStep + 1);
-    // Redirect to jobs page after a short delay
-    setTimeout(() => {
-      router.push("/reports");
-    }, 1000);
+
+    try {
+      // Crea l'oggetto JobSearchRequest come richiesto dal backend
+      const jobSearchRequest = {
+        user_id: user?.id || "",
+        role: cvData.role,
+        location: cvData.location,
+        skills: cvData.skills, // Passa l'array direttamente
+        years_experience: cvData.years_experience || 0,
+        filename: file.name || "uploaded_cv.pdf"
+      };
+
+      const response = await axios.post("http://localhost:8000/search", jobSearchRequest, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200) {
+        // Invalida la cache per la query dei report
+        queryClient.invalidateQueries({ queryKey: ["reports"] });
+        
+        toast.success("Job search completed successfully, redirecting to job reports page")
+        setTimeout(() => {
+          router.push("/reports");
+        }, 1000);
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        console.log(err.response.data)
+        toast.warning(`Error: ${err.response.data.detail}`);
+      } else {
+        toast.warning("An unexpected error occurred while finding job matches.");
+      }
+    }
   };
 
   const handleReset = () => {
@@ -136,8 +185,22 @@ function UploadCv() {
             </p>
           </div>
           <Badge variant="outline" className="order-first md:order-none h-8 gap-1.5 px-3 py-1 self-start md:self-center bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800">
-            <Sparkles className="w-4 h-4 text-emerald-500" />
-            <span className="text-emerald-700 dark:text-emerald-400 font-medium">3 credits left</span>
+            {showCreditsLoading ? (
+              <div className="flex justify-center items-center">
+                <Loader2 className="animate-spin" />
+              </div>
+            ) : isError ? (
+              <div className="flex justify-center items-center">
+                <p className="text-red-500">Error loading credits</p>
+              </div>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4 text-emerald-500" />
+                <span className="text-emerald-700 dark:text-emerald-400 font-medium">
+                  {isPro ? "Unlimited" : `${creditsLeft} credits left`}  
+                </span>
+              </>
+            )}
           </Badge>
         </div>
 
@@ -178,9 +241,9 @@ function UploadCv() {
             )}
             {currentStep === 2 && cvData && (
               <StepConfirmation 
-                cvData={cvData} 
+                cvData={cvData}
                 onChangeCvData={handleCvDataChange} 
-                onConfirm={handleConfirm} 
+                onConfirm={handleConfirm}
               />
             )}
             {currentStep === 3 && (

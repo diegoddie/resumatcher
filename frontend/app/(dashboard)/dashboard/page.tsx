@@ -9,14 +9,35 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CreditCardIcon, HistoryIcon, UploadIcon } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import { useQuery } from "@tanstack/react-query";
+import { CreditCardIcon, HistoryIcon, Loader2, UploadIcon } from "lucide-react";
 import Link from "next/link";
+import { getUserSubscription } from "@/utils/supabase/actions/userActions";
 
 export default function DashboardPage() {
+  const { user } = useUser();
+
+  const {
+    data: subscription,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["subscription", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      return getUserSubscription({ id: user.id });
+    },
+    enabled: !!user?.id,
+  });
+
   const totalCredits = 3;
-  const usedCredits = 1;
-  const remainingCredits = totalCredits - usedCredits;
-  const progressPercentage = (usedCredits / totalCredits) * 100;
+  const isPro = subscription?.plan === "pro";
+  const creditsLeft = subscription?.credits ?? 0;
+  const creditsUsed = totalCredits - creditsLeft;
+  const progressPercentage = (creditsUsed / totalCredits) * 100;
+
+  const showCreditsLoading = isLoading || !user?.id;
 
   return (
     <div className="p-5 md:p-9">
@@ -71,23 +92,49 @@ export default function DashboardPage() {
                 <CreditCardIcon className="h-5 w-5" />
                 Credits
               </CardTitle>
-              <CardDescription>Free account credits remaining</CardDescription>
+              <CardDescription>Check your credits</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold">
-                  {remainingCredits}/{totalCredits}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  Credits left
-                </span>
-              </div>
-              <Progress value={progressPercentage} className="h-2" />
-              <Link href="/account">
-                <Button className="w-full cursor-pointer" variant="outline">
-                  Upgrade Plan
-                </Button>
-              </Link>
+              {showCreditsLoading ? (
+                <div className="flex justify-center items-center">
+                  <Loader2 className="animate-spin" />
+                </div>
+              ) : isError ? (
+                <div className="flex justify-center items-center">
+                  <p className="text-red-500">Error loading credits</p>
+                </div>
+              ) : isPro ? (
+                <>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xl font-bold">PRO 🚀</span>
+                    <span className="text-sm text-muted-foreground">
+                      Unlimited
+                    </span>
+                  </div>
+                  <Link href="/account">
+                    <Button className="w-full cursor-pointer" variant="outline">
+                      Change Plan
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl font-bold">
+                      {creditsUsed}/{totalCredits}
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      Credits used
+                    </span>
+                  </div>
+                  <Progress value={progressPercentage} className="h-2" />
+                  <Link href="/account">
+                    <Button className="w-full cursor-pointer" variant="outline">
+                      Upgrade Plan
+                    </Button>
+                  </Link>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>

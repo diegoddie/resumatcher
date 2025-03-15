@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/utils/tanstack/queryClient";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,18 +32,20 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
         >
-          {children}
-        </ThemeProvider>
-        <Toaster />
-      </body>
-    </html>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </QueryClientProvider>
+          <Toaster />
+        </body>
+      </html>
     </ClerkProvider>
   );
 }

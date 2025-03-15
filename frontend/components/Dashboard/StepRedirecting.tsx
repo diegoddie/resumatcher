@@ -9,7 +9,7 @@ function StepRedirecting() {
           <Loader2Icon className="h-12 w-12 animate-spin text-primary" />
           <h2 className="text-xl font-semibold">Finding Perfect Job Matches</h2>
           <p className="text-center text-muted-foreground">
-            We&apos;re searching for jobs that match your profile. Redirecting you to job listings...
+            We&apos;re searching for jobs that match your profile...
           </p>
         </div>
       </CardContent>

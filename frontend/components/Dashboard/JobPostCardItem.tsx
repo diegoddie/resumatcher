@@ -3,25 +3,14 @@ import { CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { JobPost } from "@/utils/supabase/types/types";
+import Link from "next/link";
 
-interface JobPost {
-  id: string;
-  role: string;
-  company: string;
-  location: string;
-  description?: string;
-  matchScore: number;
-  requirements?: string[];
-  salary?: string;
-  createdAt?: string;
-  url?: string;
-}
-
-function JobPostCardItem({ item, isBlurred }: { item: JobPost, isBlurred: boolean }) {
-  const getScoreColor = (score: number) => {
-    if (score >= 90) return "text-green-500";
-    if (score >= 75) return "text-emerald-500";
-    if (score >= 60) return "text-amber-500";
+function JobPostCardItem({ jobPost, isBlurred, matchScore }: { jobPost: JobPost, isBlurred: boolean, matchScore: number }) {
+  const getScoreColor = (matchScore: number) => {
+    if (matchScore >= 90) return "text-green-500";
+    if (matchScore >= 75) return "text-emerald-500";
+    if (matchScore >= 60) return "text-amber-500";
     return "text-red-500";
   };
 
@@ -35,16 +24,16 @@ function JobPostCardItem({ item, isBlurred }: { item: JobPost, isBlurred: boolea
       <CardHeader>
         <CardTitle className="flex items-start justify-between">
           <div className="space-y-2">
-            <div className="text-xl md:text-3xl">{item.role}</div>
+            <div className="text-xl md:text-3xl">{jobPost.role}</div>
             <div className="flex items-center mt-1 text-muted-foreground text-sm">
               <BriefcaseIcon className="h-4 w-4 mr-1" />
-              <span className="font-medium">{item.company}</span>
+              <span className="font-medium">{jobPost.company}</span>
               <span className="mx-2">•</span>
               <MapPinIcon className="h-4 w-4 mr-1" />
-              <span>{item.location}</span>
+              <span>{jobPost.location}</span>
             </div>
             <div className="text-md md:text-lg">
-              {item?.salary}
+              {jobPost?.salary}
             </div>
           </div>
           <div className="text-right">
@@ -61,8 +50,8 @@ function JobPostCardItem({ item, isBlurred }: { item: JobPost, isBlurred: boolea
               </>
             ) : (
               <>
-              <div className={`text-2xl md:text-3xl font-bold ${getScoreColor(item.matchScore)}`}>
-                {item.matchScore}%
+              <div className={`text-2xl md:text-3xl font-bold ${getScoreColor(matchScore)}`}>
+                {matchScore}%
               </div>
               <div className="text-xs text-muted-foreground">Match Score</div>
               </>
@@ -74,10 +63,10 @@ function JobPostCardItem({ item, isBlurred }: { item: JobPost, isBlurred: boolea
       <CardContent>
         <div className="space-y-4">
             <div className="text-sm text-muted-foreground">
-                {truncateText(item.description || "", 100)}
+                {truncateText(jobPost.description || "", 100)}
             </div>
           <div className="flex flex-wrap gap-2">
-            {item.requirements?.map((req, index) => (
+            {jobPost.requirements?.map((req, index) => (
               <Badge key={index} variant="secondary" className="text-sm md:text-md">
                 {req}
               </Badge>
@@ -85,10 +74,12 @@ function JobPostCardItem({ item, isBlurred }: { item: JobPost, isBlurred: boolea
           </div>
           <div className="flex items-center justify-end">
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="text-md cursor-pointer">
-                <ExternalLinkIcon className="h-4 w-4" />
-                Apply
-              </Button>
+              <Link href={jobPost.url || ""} target="_blank">
+                <Button variant="outline" size="sm" className="text-md cursor-pointer">
+                  <ExternalLinkIcon className="h-4 w-4" />
+                  Apply
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

@@ -17,7 +17,7 @@ def generate_summary_with_openai(cleaned_text: str) -> CvSummary:
     
     Extract the following information in JSON format:
     - role: The person's primary role (e.g., "Frontend Developer", "Data Scientist")
-    - experience_years: Estimated years of professional experience (integer)
+    - years_experience: Estimated years of professional experience (integer)
     - location: The person's current or preferred location
     - skills: Technical and personal skills. Structure them as a simple list of strings and not as a list of objects. See the example below:
        * A simple list of strings: ["JavaScript", "Python"]
@@ -36,6 +36,7 @@ def generate_summary_with_openai(cleaned_text: str) -> CvSummary:
         
         result = response.choices[0].message.content
         analysis_data = json.loads(result)
+
         return CvSummary.model_validate(analysis_data)
     except Exception as e:
         print(f"Error in OpenAI API call: {e}")

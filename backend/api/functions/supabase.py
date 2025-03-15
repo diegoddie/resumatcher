@@ -98,7 +98,7 @@ def update_credits(user_id: str) -> bool:
         # Recupera la sottoscrizione
         user_subscription = (
             supabase.table("subscriptions")
-            .select("id, credits")
+            .select("id, credits, plan")
             .eq("user_id", user_id)
             .single()
             .execute()
@@ -109,12 +109,12 @@ def update_credits(user_id: str) -> bool:
 
         subscription = user_subscription.data
 
-        if subscription["credits"] <= 0:
-            raise HTTPException(status_code=403, detail="No credits left")
-
-        supabase.table("subscriptions").update(
-            {"credits": subscription["credits"] - 1}, returning="minimal"
-        ).eq("id", subscription["id"]).execute()
+        if subscription["plan"] == "free":
+            if subscription["credits"] <= 0:
+                raise HTTPException(status_code=403, detail="No credits left")
+            supabase.table("subscriptions").update(
+                {"credits": subscription["credits"] - 1}, returning="minimal"
+            ).eq("id", subscription["id"]).execute()
 
         return True
 

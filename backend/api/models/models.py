@@ -3,7 +3,7 @@ from typing import List, Optional
 
 class CvSummary(BaseModel):
     role: str 
-    experience_years: Optional[int] = None
+    years_experience: Optional[int] = None
     location: Optional[str] = None
     skills: List[str] = []
     summary: str = Field(default="")

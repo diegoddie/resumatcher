@@ -1,28 +1,46 @@
-import { HistoryIcon } from "lucide-react";
+"use client";
+
+import { HistoryIcon, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import JobReportCard from "@/components/Dashboard/JobReportCard";
+import { useUser } from "@clerk/nextjs";
+import {
+  getJobPostCountForReport,
+  getUserJobReports,
+} from "@/utils/supabase/actions/userActions";
+import { useQueries, useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Reports = () => {
-  const item = [
-    {
-        id: "1",
-        date: "2024-03-20",
-        fileName: "John_Doe_CV.pdf",
-        role: "Software Engineer",
-        jobCount: 8,
-        skills: ["React", "TypeScript", "Node.js"], 
-        location: "Milan",
-    },
-    {
-        id: "2",
-        date: "2024-08-22",
-        fileName: "Resume2.pdf",
-        role: "Backend Developer",
-        jobCount: 10,
-        skills: ["Python", "Fastapi", "Django"],
-        location: "Brescia",
-    }
-  ]
+  const { user } = useUser();
+
+  const {
+    data: jobReports,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["jobReports", user?.id],
+    queryFn: () => getUserJobReports({ id: user?.id || "" }),
+    enabled: !!user?.id,
+    staleTime: 0,
+    refetchOnMount: true,
+  });
+
+  const jobPostCountQueries = useQueries({
+    queries: (jobReports || []).map((report) => ({
+      queryKey: ["jobPostCount", report.id],
+      queryFn: () => getJobPostCountForReport({ reportId: report.id }),
+      enabled: !!jobReports,
+    })),
+  });
+
+  const totalMatches = jobPostCountQueries.reduce(
+    (acc, curr) => acc + (curr.data || 0),
+    0
+  );
+  const isLoadingAll =
+    isLoading || jobPostCountQueries.some((query) => query.isLoading);
 
   return (
     <div className="p-5 md:p-9">
@@ -35,9 +53,9 @@ const Reports = () => {
             View your job reports and analytics.
           </p>
         </div>
-     
+
         <div className="grid gap-5 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <Card className="flex flex-col">
+          <Card className="flex flex-col">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-xl">
                 <HistoryIcon className="h-5 w-5" />
@@ -45,10 +63,24 @@ const Reports = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold">2</div>
-              <p className="text-sm text-muted-foreground">
-                Last upload 12/07/2025
-              </p>
+              {isLoadingAll ? (
+                <div className="flex items-center justify-center">
+                  <Loader2 className="animate-spin" />
+                </div>
+              ) : (
+                <>
+                  <div className="text-4xl font-bold">
+                    {jobReports?.length || 0}
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {jobReports && jobReports.length > 0
+                      ? `Last upload ${new Date(
+                          jobReports[0].created_at || ""
+                        ).toLocaleDateString()}`
+                      : "No reports yet"}
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
           <Card className="flex flex-col">
@@ -59,16 +91,45 @@ const Reports = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold">20</div>
-              <p className="text-sm text-muted-foreground">
-                Across all CV uploads
-              </p>
+              {isLoadingAll ? (
+                <div className="flex items-center justify-center">
+                  <Loader2 className="animate-spin" />
+                </div>
+              ) : (
+                <>
+                  <div className="text-4xl font-bold">{totalMatches}</div>
+                  <p className="text-sm text-muted-foreground">
+                    Across all CV uploads
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
-        {item.map((item) => (
-          <JobReportCard key={item.id} item={item} />
-        ))}
+        {isLoadingAll ? (
+          <div className="flex items-center justify-center">
+            <Loader2 className="animate-spin" />
+          </div>
+        ) : isError ? (
+          <div className="flex items-center justify-center">
+            <p className="text-red-500">Error loading reports</p>
+          </div>
+        ) : jobReports && jobReports.length > 0 ? (
+          jobReports?.map((jobReport, index) => (
+            <JobReportCard
+              key={jobReport.id}
+              jobReport={jobReport}
+              matchCount={jobPostCountQueries[index]?.data || 0}
+            />
+          ))
+        ) : (
+          <div className="flex items-center justify-center flex-col gap-4">
+            <p className="text-muted-foreground">No reports yet</p>
+            <Link href="/upload">
+              <Button size="lg" className="cursor-pointer">Start here</Button>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
