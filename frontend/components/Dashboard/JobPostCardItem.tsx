@@ -3,10 +3,10 @@ import { CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { JobPost } from "@/utils/supabase/types/types";
+import { JobPostInfo } from "@/utils/supabase/types/types";
 import Link from "next/link";
 
-function JobPostCardItem({ jobPost, isBlurred, matchScore }: { jobPost: JobPost, isBlurred: boolean, matchScore: number }) {
+function JobPostCardItem({ jobPost, isBlurred, matchScore }: { jobPost: JobPostInfo, isBlurred: boolean, matchScore: number }) {
   const getScoreColor = (matchScore: number) => {
     if (matchScore >= 90) return "text-green-500";
     if (matchScore >= 75) return "text-emerald-500";

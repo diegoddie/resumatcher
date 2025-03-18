@@ -1,7 +1,7 @@
 "use server"
 
 import { createClerkSupabaseClientSsr } from "@/utils/clerk/clerk-client";
-import { JobPost, JobReport, MatchScore, UserCreditsInfo } from "../types/types";
+import { JobPostInfo, JobReportInfo, MatchScoreInfo, UserCreditsInfo } from "../types/types";
 
 export async function getUserSubscription({ id }: { id: string }): Promise<UserCreditsInfo | null> {
     if (!id) return null;
@@ -22,12 +22,12 @@ export async function getUserSubscription({ id }: { id: string }): Promise<UserC
     }
 }
 
-export async function getUserJobReports({ id }: { id: string }): Promise<JobReport[] | null> {
+export async function getUserJobReports({ id }: { id: string }): Promise<JobReportInfo[] | null> {
     if (!id) return null;
     try {
         const client = await createClerkSupabaseClientSsr();
 
-        const { data, error } = await client.from("job_reports").select("*").eq("user_id", id).order("created_at", { ascending: false });
+        const { data, error } = await client.from("job_reports").select("id, filename, created_at, location, role, skills").eq("user_id", id).order("created_at", { ascending: false });
 
         if (error) {
             console.error("Error fetching user job report:", error);
@@ -63,7 +63,7 @@ export async function getJobPostCountForReport({ reportId }: { reportId: string 
     }
 }
 
-export async function getJobPostsForReport({ reportId }: { reportId: string }): Promise<JobPost[] | null> {
+export async function getJobPostsForReport({ reportId }: { reportId: string }): Promise<JobPostInfo[] | null> {
     if (!reportId) return null;
     try {
         const client = await createClerkSupabaseClientSsr();
@@ -75,7 +75,7 @@ export async function getJobPostsForReport({ reportId }: { reportId: string }): 
             return null;
         }
 
-        const { data: jobPosts, error: jobPostsError } = await client.from("job_posts").select("*").in("id", jobPostIds.map(post => post.job_post_id));
+        const { data: jobPosts, error: jobPostsError } = await client.from("job_posts").select("id, role, company, location, description, salary, requirements, url").in("id", jobPostIds.map(post => post.job_post_id));
 
         if (jobPostsError) {
             console.error("Error fetching job posts:", jobPostsError);
@@ -90,7 +90,7 @@ export async function getJobPostsForReport({ reportId }: { reportId: string }): 
     }
 }
 
-export async function getMatchScoreForJobPost({ jobPostId, jobReportId, userId }: { jobPostId: string, jobReportId: string, userId: string }): Promise<MatchScore | null>{
+export async function getMatchScoreForJobPost({ jobPostId, jobReportId, userId }: { jobPostId: string, jobReportId: string, userId: string }): Promise<MatchScoreInfo | null>{
     if (!jobPostId || !jobReportId || !userId) {
         console.error("Missing required parameters:", { jobPostId, jobReportId, userId });
         return null;
@@ -102,7 +102,7 @@ export async function getMatchScoreForJobPost({ jobPostId, jobReportId, userId }
         // Prima verifichiamo se esiste un match score con questi parametri
         const { data, error } = await client
             .from("match_scores")
-            .select("*")
+            .select("score")
             .eq("job_post_id", jobPostId)
             .eq("job_report_id", jobReportId)
             .eq("user_id", userId)

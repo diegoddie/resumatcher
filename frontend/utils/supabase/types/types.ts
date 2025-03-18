@@ -12,8 +12,27 @@ export type UserCreditsInfo = {
     plan: string;
 };
 
+export type MatchScoreInfo = {
+    score: number;
+}
 
+export type JobReportInfo = {
+    id: string;
+    filename: string;
+    created_at: string;
+    location: string;
+    role: string;
+    skills: string[];
+}
 
-
-
+export type JobPostInfo = {
+    id: string;
+    company: string;
+    role: string;
+    location: string;
+    description: string;
+    salary: string;
+    requirements: string[];
+    url: string;
+}
 

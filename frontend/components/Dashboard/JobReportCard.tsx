@@ -5,12 +5,12 @@ import { FileTextIcon } from "lucide-react";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { JobReport } from "@/utils/supabase/types/types";
+import { JobReportInfo } from "@/utils/supabase/types/types";
 
 function JobReportCard({ 
   jobReport,
   matchCount,
- }: { jobReport: JobReport, matchCount: number }) {
+ }: { jobReport: JobReportInfo, matchCount: number }) {
 
   const MAX_SKILLS_TO_SHOW = 6;
 
