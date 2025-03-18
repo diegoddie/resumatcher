@@ -1,4 +1,3 @@
-
 import { SidebarInset } from "@/components/ui/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/Dashboard/Sidebar/app-sidebar"

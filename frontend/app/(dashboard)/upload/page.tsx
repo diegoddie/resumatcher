@@ -151,6 +151,9 @@ function UploadCv() {
         // Invalida la cache per la query dei report
         queryClient.invalidateQueries({ queryKey: ["reports"] });
         
+        // Invalida la cache per la query dei crediti/subscription
+        queryClient.invalidateQueries({ queryKey: ["subscription", user?.id] });
+        
         toast.success("Job search completed successfully, redirecting to job reports page")
         setTimeout(() => {
           router.push("/reports");

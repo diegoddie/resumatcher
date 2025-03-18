@@ -67,10 +67,10 @@ const JobPost = () => {
             <div className="flex flex-col space-y-7 md:space-y-9">
                 <div className="flex flex-col space-y-1">
                     <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-                        Job Report
+                        Job Posts
                     </h1>
                     <p className="text-muted-foreground">
-                        View your job reports and analytics.
+                        View details about the job posts we found for you.
                     </p>
                 </div>
                 {isLoading || isLoadingScores ? (
