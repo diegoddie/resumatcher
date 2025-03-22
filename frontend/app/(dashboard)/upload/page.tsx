@@ -99,12 +99,15 @@ function UploadCv() {
       const cvData: CVData = response.data;
 
       setCvData(cvData);
-      toast.success("CV analyzed successfully by AI, please review the data before confirming.")
+      toast.success("CV analyzed successfully by AI, please review the data before confirming.", {
+        richColors: true,
+      });
 
       setCurrentStep(currentStep + 1);
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         toast.warning(`Error: ${err.response.data.detail}`, {
+          richColors: true,
           action: {
             label: 'Upgrade to Pro',
             onClick: () => {
@@ -113,7 +116,10 @@ function UploadCv() {
           }
         });
       } else {
-        toast.warning("An unexpected error occurred. Please try again.")
+        toast.warning("An unexpected error occurred. Please try again.", {
+          richColors: true,
+          duration: 4000,
+        });
       }
     } finally {
       setIsUploading(false);
@@ -154,7 +160,10 @@ function UploadCv() {
         // Invalida la cache per la query dei crediti/subscription
         queryClient.invalidateQueries({ queryKey: ["subscription", user?.id] });
         
-        toast.success("Job search completed successfully, redirecting to job reports page")
+        toast.info("Job search completed successfully, redirecting to job reports page", {
+          richColors: true,
+          duration: 4000,
+        });
         setTimeout(() => {
           router.push("/reports");
         }, 1000);
@@ -162,9 +171,15 @@ function UploadCv() {
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         console.log(err.response.data)
-        toast.warning(`Error: ${err.response.data.detail}`);
+        toast.warning(`Error: ${err.response.data.detail}`, {
+          richColors: true,
+          duration: 4000,
+        });
       } else {
-        toast.warning("An unexpected error occurred while finding job matches.");
+        toast.warning("An unexpected error occurred while finding job matches.", {
+          richColors: true,
+          duration: 4000,
+        });
       }
     }
   };
@@ -183,7 +198,7 @@ function UploadCv() {
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
               {stepTitles[currentStep]}
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-foreground text-md md:text-lg tracking-tight">
               {stepDescriptions[currentStep]}
             </p>
           </div>
@@ -210,19 +225,19 @@ function UploadCv() {
         <div className="flex justify-center w-full">
           <div className="w-full md:max-w-5xl flex flex-col gap-4">
             <div className="text-center gap-2 w-1/2 mx-auto">
-              <div className="text-sm font-medium tabular-nums text-muted-foreground">
+              <div className="text-md font-medium tabular-nums text-foreground tracking-tight ">
                 Step {currentStep + 1} of {steps.length}
               </div>
               <Stepper value={currentStep} onValueChange={setCurrentStep}>
               {steps.map((step, index) => (
                   <StepperItem key={step} step={index} className="flex-1">
                     <StepperTrigger
-                      className="w-full flex-col items-start gap-2" 
+                      className="w-full flex-col items-start gap-2 bg-[#3b82f6]" 
                       asChild
                     >
                       <StepperIndicator
                         asChild
-                        className="h-2 w-full rounded-none"
+                        className="h-2 w-full rounded-none bg-[#c9daf4]"
                       >
                         <span className="sr-only">{step}</span>
                       </StepperIndicator>

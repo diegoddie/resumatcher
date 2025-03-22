@@ -1,10 +1,18 @@
 import Navbar from "@/components/LandingPage/Navbar";
-
+import Hero from "@/components/LandingPage/Hero";
+import HowItWorks from "@/components/LandingPage/HowItWorks";
+import Pricing from "@/components/LandingPage/Pricing";
+import CTA from "@/components/LandingPage/CTA";
+import Footer from "@/components/LandingPage/Footer";
 export default function Home() {
   return (
-    <div className="h-screen">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
-      <h1>I&apos;ll be a nice and catchy landing page</h1>
+      <Hero />
+      <HowItWorks />
+      <Pricing />
+      <CTA />
+      <Footer />
     </div>
   );
 }

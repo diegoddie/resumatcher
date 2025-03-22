@@ -16,18 +16,18 @@ function StepFileSelected({
   onChangeFile 
 }: StepFileSelectedProps) {
   return (
-    <Card className="w-full">
+    <Card className="w-full border border-slate-500">
       <CardContent className="pt-6">
         <div className="w-full space-y-4">
-          <div className="flex items-center p-4 rounded-md border bg-muted/30">
-            <FileTextIcon className="h-8 w-8 mr-3 text-primary" />
+          <div className="flex items-center p-4 rounded-md border border-slate-500">
+            <FileTextIcon className="h-8 w-8 mr-3" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{file.name}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-md font-medium truncate text-foreground tracking-tight">{file.name}</p>
+              <p className="text-sm text-foreground tracking-tight">
                 {(file.size / 1024).toFixed(2)} KB
               </p>
             </div>
-            <Button variant="ghost" size="sm" onClick={onChangeFile}>
+            <Button variant="ghost" size="sm" onClick={onChangeFile} className="text-foreground tracking-tight">
               Change
             </Button>
           </div>
@@ -35,7 +35,7 @@ function StepFileSelected({
       </CardContent>
       <CardFooter>
         <Button
-          className="w-full cursor-pointer"
+          className="w-full cursor-pointer bg-[#3b82f6] hover:bg-[#2563eb] text-white tracking-tight text-md"
           onClick={onUpload}
           disabled={isUploading}
         >

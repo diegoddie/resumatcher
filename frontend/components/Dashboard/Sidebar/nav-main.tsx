@@ -26,12 +26,12 @@ export function NavMain({
     <SidebarGroup>
       <SidebarMenu>
         {items.map((item) => (
-          <SidebarMenuItem key={item.title}>
+          <SidebarMenuItem key={item.title} className="hover:bg-slate-700/20 dark:hover:bg-slate-800 transition-colors duration-300">
             <SidebarMenuButton 
               asChild
               isActive={pathname === item.url}
             >
-              <Link href={item.url} className="gap-4">
+              <Link href={item.url} className="gap-4 tracking-tight">
                 {item.icon && <item.icon size={32} />}
                 <span>{item.title}</span>
               </Link>

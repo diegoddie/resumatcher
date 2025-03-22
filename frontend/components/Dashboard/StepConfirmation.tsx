@@ -61,7 +61,7 @@ function StepConfirmation({
   };
 
   return (
-    <Card className="w-full ">
+    <Card className="w-full border border-slate-500">
       <CardContent className="">
         <div className="space-y-8">
           <div className="flex flex-col items-center space-y-4 pb-5">
@@ -69,8 +69,8 @@ function StepConfirmation({
               <CheckIcon className="h-8 w-8 text-primary" />
             </div>
             <div className="space-y-2 text-center">
-              <h2 className="text-2xl font-semibold">CV Analysis Complete</h2>
-              <p className="text-muted-foreground">
+              <h2 className="text-2xl font-semibold text-foreground tracking-tight">CV Analysis Complete</h2>
+              <p className="text-foreground tracking-tight">
                 Our AI has extracted the following information from your CV.
                 Please verify it&apos;s correct.
               </p>
@@ -90,7 +90,7 @@ function StepConfirmation({
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <Label>Role</Label>
+                <Label className="text-foreground tracking-tight text-md font-bold">Role</Label>
                 {isEditing ? (
                   <Input
                     value={editedData.role}
@@ -100,12 +100,12 @@ function StepConfirmation({
                     placeholder="Enter your role"
                   />
                 ) : (
-                  <p className="text-xl text-muted-foreground">{cvData.role}</p>
+                  <p className="text-2xl text-foreground tracking-tight">{cvData.role}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label>Experience</Label>
+                <Label className="text-foreground tracking-tight text-md font-bold">Experience</Label>
                 {isEditing ? (
                   <Input
                     type="number"
@@ -119,14 +119,14 @@ function StepConfirmation({
                     placeholder="Years of experience"
                   />
                 ) : (
-                  <p className="text-xl text-muted-foreground">
+                  <p className="text-2xl text-foreground tracking-tight">
                     {cvData.years_experience} years
                   </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label>Location</Label>
+                <Label className="text-foreground tracking-tight text-md font-bold">Location</Label>
                 {isEditing ? (
                   <Input
                     value={editedData.location}
@@ -136,13 +136,13 @@ function StepConfirmation({
                     placeholder="Enter your location"
                   />
                 ) : (
-                  <p className="text-xl text-muted-foreground">
+                  <p className="text-2xl text-foreground tracking-tight">
                     {cvData.location}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label>Skills</Label>
+                <Label className="text-foreground tracking-tight text-md font-bold">Skills</Label>
                 <div className="flex flex-wrap gap-2">
                   {(isEditing ? editedData : cvData).skills.map(
                     (skill, index) => (
@@ -150,7 +150,7 @@ function StepConfirmation({
                         key={index}
                         variant="secondary"
                         className={cn(
-                          "text-md",
+                          "text-sm tracking-tight border border-slate-500",
                           isEditing &&
                             "pr-2 hover:bg-destructive/10 hover:text-destructive transition-colors"
                         )}
@@ -159,7 +159,7 @@ function StepConfirmation({
                         {isEditing && (
                           <button
                             onClick={() => handleRemoveSkill(skill)}
-                            className="ml-1 hover:text-destructive focus:outline-none"
+                            className="ml-1 hover:text-red-600 focus:outline-none cursor-pointer"
                           >
                             <XIcon className="h-3 w-3" />
                             <span className="sr-only">Remove {skill}</span>
@@ -198,7 +198,7 @@ function StepConfirmation({
             </div>
 
             <div className="space-y-2">
-              <Label>Summary</Label>
+              <Label className="text-foreground tracking-tight text-md font-bold">Summary</Label>
               {isEditing ? (
                 <Textarea
                   value={editedData.summary}
@@ -209,7 +209,7 @@ function StepConfirmation({
                   className="min-h-[100px]"
                 />
               ) : (
-                <p className="text-xl text-muted-foreground">
+                <p className="text-xl text-foreground tracking-tight">
                   {cvData.summary}
                 </p>
               )}
@@ -223,27 +223,26 @@ function StepConfirmation({
           <>
             <Button
               variant="outline"
-              className="w-1/2"
+              className="w-1/2 hover:border-none hover:text-white bg-red-500 hover:bg-red-600 text-white cursor-pointer tracking-tight text-md transition-colors duration-300"
               onClick={() => setIsEditing(false)}
             >
               Cancel
             </Button>
-            <Button className="w-1/2" onClick={handleSave}>
+            <Button className="w-1/2 bg-green-500 hover:bg-green-600 text-white cursor-pointer tracking-tight text-md transition-colors duration-300" onClick={handleSave}>
               Save Changes
             </Button>
           </>
         ) : (
           <div className="flex flex-col gap-4 md:gap-0 md:flex-row md:justify-between w-full mt-4">
             <Button
-              variant="outline"
-              className="cursor-pointer"
+              className="cursor-pointer bg-[#3b82f6] hover:bg-[#2563eb] text-white tracking-tight text-md transition-colors duration-300"
               onClick={handleEdit}
             >
-              <PencilIcon className="mr-1 h-4 w-4" />
+              <PencilIcon className="h-4 w-4" />
               Edit Information
             </Button>
-            <Button className="cursor-pointer" onClick={onConfirm}>
-              <Check className="mr-1 h-4 w-4" />
+            <Button className="cursor-pointer bg-green-500 hover:bg-green-600 text-white tracking-tight text-md transition-colors duration-300" onClick={onConfirm}>
+              <Check className="h-4 w-4" />
               Confirm and Find Jobs
             </Button>
           </div>

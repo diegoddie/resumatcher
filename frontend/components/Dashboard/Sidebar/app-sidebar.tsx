@@ -49,24 +49,24 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props} className="border-r border-r-black/30 dark:border-r-slate-500">
+    <Sidebar collapsible="icon" {...props} className="border-r border-r-slate-500">
       <SidebarHeader>
         <SidebarMenuButton
           size="lg"
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
         >
-          <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-            <Briefcase className="h-5 w-5" />
+          <div className="bg-[#3b82f6] hover:bg-[#2563eb] flex aspect-square size-8 items-center justify-center rounded-lg">
+            <Briefcase className="h-5 w-5 text-white" />
           </div>
           <div className="text-left text-lg leading-tight">
-            <span className="truncate font-medium">Resumatcher</span>
+            <span className="truncate tracking-tight text-xl font-bold">Resumatcher</span>
           </div>
         </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent className="pt-5">
         <NavMain items={data.navMain} />
       </SidebarContent>
-      <div className="border-t border-gray-200 mx-3"></div>
+      <div className="border-t border-slate-500 mx-3"></div>
       <SidebarFooter className="">
         <NavUser />
       </SidebarFooter>

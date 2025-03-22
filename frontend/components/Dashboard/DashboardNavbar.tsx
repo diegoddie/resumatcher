@@ -13,7 +13,7 @@ function DashboardNavbar() {
   const { signOut } = useClerk();
 
   return (
-    <header className="bg-white dark:bg-[#09090b] dark:text-white text-black flex h-16 shrink-0 items-center justify-between border-b border-b-black/30 dark:border-b-slate-500 px-3">
+    <header className="flex h-16 shrink-0 items-center justify-between border-b border-b-slate-500 px-3">
       <div className="flex items-center gap-2">
         <SidebarTrigger className="cursor-pointer" />
       </div>
@@ -26,14 +26,14 @@ function DashboardNavbar() {
               <AvatarFallback className="rounded-lg">CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem
-              onClick={() => signOut()}
-              className="flex items-center gap-2 cursor-pointer"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </DropdownMenuItem>
+          <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-black border border-slate-400 dark:border-slate-700">
+          <DropdownMenuItem
+                    onClick={() => signOut()}
+                    className="flex items-center gap-2 cursor-pointer text-red-600 dark:text-red-400 hover:bg-red-600/20 dark:hover:bg-red-600/20 transition-colors"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

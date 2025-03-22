@@ -49,15 +49,15 @@ const Reports = () => {
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
             Job Reports
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-foreground text-md md:text-lg tracking-tight">
             View your job reports and analytics.
           </p>
         </div>
 
         <div className="grid gap-5 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="flex flex-col">
+          <Card className="flex flex-col border-slate-500">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl">
+              <CardTitle className="flex items-center gap-2 text-xl md:text-2xl tracking-tight">
                 <HistoryIcon className="h-5 w-5" />
                 Job Reports
               </CardTitle>
@@ -69,10 +69,10 @@ const Reports = () => {
                 </div>
               ) : (
                 <>
-                  <div className="text-4xl font-bold">
+                  <div className="text-4xl font-bold tracking-tight">
                     {jobReports?.length || 0}
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-foreground tracking-tight">
                     {jobReports && jobReports.length > 0
                       ? `Last upload ${new Date(
                           jobReports[0].created_at || ""
@@ -83,9 +83,9 @@ const Reports = () => {
               )}
             </CardContent>
           </Card>
-          <Card className="flex flex-col">
+          <Card className="flex flex-col border-slate-500">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl">
+              <CardTitle className="flex items-center gap-2 text-xl md:text-2xl tracking-tight">
                 <HistoryIcon className="h-5 w-5" />
                 Total Matches
               </CardTitle>
@@ -97,8 +97,8 @@ const Reports = () => {
                 </div>
               ) : (
                 <>
-                  <div className="text-4xl font-bold">{totalMatches}</div>
-                  <p className="text-sm text-muted-foreground">
+                  <div className="text-4xl font-bold tracking-tight">{totalMatches}</div>
+                  <p className="text-sm text-foreground tracking-tight">
                     Across all CV uploads
                   </p>
                 </>
@@ -124,9 +124,9 @@ const Reports = () => {
           ))
         ) : (
           <div className="flex items-center justify-center flex-col gap-4">
-            <p className="text-muted-foreground">No reports yet</p>
+            <p className="text-foreground tracking-tight">No reports yet</p>
             <Link href="/upload">
-              <Button size="lg" className="cursor-pointer">Start here</Button>
+              <Button size="lg" className="cursor-pointer tracking-tight text-white bg-[#3b82f6] hover:bg-[#2563eb] text-lg transition-colors duration-300">Start here</Button>
             </Link>
           </div>
         )}

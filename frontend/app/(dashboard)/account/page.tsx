@@ -63,20 +63,22 @@ function Account() {
 
   return (
     <div className="p-5 md:p-9">
-      <div className="flex flex-col space-y-6 md:space-y-8">
+      <div className="flex flex-col space-y-7 md:space-y-9">
         <div className="flex flex-col space-y-1">
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
             Account
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-foreground text-md md:text-lg tracking-tight">
             Manage your account settings and preferences.
           </p>
         </div>
         <div className="flex flex-col md:flex-row gap-4 w-full">
-          <Card className="w-full md:w-1/2">
+          <Card className="w-full md:w-1/2 border-slate-500">
             <CardHeader>
-              <CardTitle>Profile</CardTitle>
-              <CardDescription>
+              <CardTitle className="flex items-center gap-2 text-xl md:text-2xl tracking-tight">
+                Profile
+              </CardTitle>
+              <CardDescription className="tracking-tight text-md md:text-lg">
                 Manage your profile information.
               </CardDescription>
             </CardHeader>
@@ -102,25 +104,35 @@ function Account() {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-lg font-medium">{user?.fullName}</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-lg font-medium tracking-tight">
+                        {user?.fullName}
+                      </p>
+                      <p className="text-sm text-foreground tracking-tight">
                         {user?.emailAddresses[0].emailAddress}
                       </p>
                     </div>
                   </div>
                   <div className="grid gap-2">
-                    <div className="flex items-center justify-between py-2 border-b">
+                    <div className="flex items-center justify-between py-2 border-b border-slate-500">
                       <div>
-                        <p className="font-medium">Current Plan</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="font-medium tracking-tight text-md md:text-lg">
+                          Current Plan
+                        </p>
+                        <p className="text-sm md:text-md text-muted-foreground tracking-tight">
                           {isPro ? "Pro" : "Free"} plan
                         </p>
                       </div>
                       <div className="flex flex-col md:flex-row gap-2">
-                        <Badge variant="outline" className="ml-auto">
+                        <Badge
+                          variant="outline"
+                          className="ml-auto tracking-tight border-slate-500"
+                        >
                           {isPro ? "Unlimited Job Reports" : "3 Job Reports"}
                         </Badge>
-                        <Badge variant="outline" className="ml-auto">
+                        <Badge
+                          variant="outline"
+                          className="ml-auto tracking-tight border-slate-500"
+                        >
                           {isPro
                             ? "Unlimited Match Score / Job Report"
                             : "3 Match Score / Job Report"}
@@ -129,12 +141,17 @@ function Account() {
                     </div>
                     <div className="flex items-center justify-between py-2">
                       <div>
-                        <p className="font-medium">Credits Remaining</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="font-medium tracking-tight text-md md:text-lg">
+                          Credits Remaining
+                        </p>
+                        <p className="text-sm md:text-md text-muted-foreground tracking-tight">
                           {isPro ? "Unlimited" : `${creditsLeft} Credits`}
                         </p>
                       </div>
-                      <Badge variant="outline" className="ml-auto">
+                      <Badge
+                        variant="outline"
+                        className="ml-auto tracking-tight border-slate-500"
+                      >
                         {isPro ? "Unlimited" : `${creditsLeft} Credits`}
                       </Badge>
                     </div>
@@ -144,41 +161,43 @@ function Account() {
             </CardContent>
           </Card>
 
-          <Card className="w-full md:w-1/2 justify-between space-y-3">
+          <Card className="w-full md:w-1/2 border-slate-500">
             <CardHeader>
-              <CardTitle>
+              <CardTitle className="flex items-center gap-2 text-xl md:text-2xl tracking-tight">
                 {isPro ? "Back to Free Plan" : "Upgrade to Pro"}
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="tracking-tight text-md md:text-lg">
                 {isPro
                   ? "Go back to the free plan"
                   : "Get more features and unlimited credits."}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               <div className="flex items-center space-x-4">
-                <div className="bg-primary/10 p-3 rounded-full">
-                  <Zap className="h-6 w-6 text-yellow-600 " />
+                <div className="bg-yellow-500/10 p-3 rounded-full">
+                  <Zap className="h-6 w-6 text-yellow-500 " />
                 </div>
                 <div>
-                  <p className="font-medium">
+                  <p className="font-medium tracking-tight text-md md:text-lg">
                     {isPro ? "Free Plan - $0/month" : "Pro Plan - $5.99/month"}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm md:text-md text-muted-foreground tracking-tight">
                     {isPro
                       ? "Get back to limited Job Reports and limited Match Score visualization"
                       : "Unlock unlimited Job Reports generation and unlimited job matching scores"}
                   </p>
                 </div>
               </div>
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 <li className="flex items-center">
                   {isPro ? (
                     <XCircle className="mr-2 h-4 w-4 text-red-500" />
                   ) : (
                     <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
                   )}
-                  <span className="text-sm">Unlimited Job Reports</span>
+                  <span className="text-sm md:text-md tracking-tight">
+                    Unlimited Job Reports
+                  </span>
                 </li>
                 <li className="flex items-center">
                   {isPro ? (
@@ -186,7 +205,7 @@ function Account() {
                   ) : (
                     <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
                   )}
-                  <span className="text-sm">
+                  <span className="text-sm md:text-md tracking-tight">
                     Match Score for every job post
                   </span>
                 </li>
@@ -196,54 +215,61 @@ function Account() {
                   ) : (
                     <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
                   )}
-                  <span className="text-sm">Priority support</span>
+                  <span className="text-sm md:text-md tracking-tight">
+                    Priority support
+                  </span>
                 </li>
               </ul>
             </CardContent>
             <CardFooter>
-              <Button className="w-full cursor-pointer">
+              <Button className="w-full cursor-pointer tracking-tight text-white bg-[#3b82f6] hover:bg-[#2563eb] text-lg transition-colors duration-300">
                 {isPro ? "Back to Free Plan" : "Upgrade to Pro"}
               </Button>
             </CardFooter>
           </Card>
         </div>
-        <Card>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Delete Account</p>
-                <p className="text-sm text-muted-foreground">
-                  Permanently delete your account
-                </p>
-              </div>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="destructive" className="cursor-pointer">
-                    Delete
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Are you sure?</DialogTitle>
-                    <DialogDescription>
-                      This action is irreversible. Your account will be
-                      permanently deleted.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <Button
-                      variant="destructive"
-                      onClick={handleDeleteAccount}
-                      disabled={deleteLoading}
-                      className="cursor-pointer"
-                    >
-                      {deleteLoading ? "Deleting..." : "Confirm Delete"}
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+        <Card className="border-slate-500">
+          <CardHeader className="flex flex-col md:flex-row justify-between md:items-center">
+            <div className="flex flex-col">
+              <CardTitle className="flex items-center gap-2 text-xl md:text-2xl tracking-tight">
+                Delete Account
+              </CardTitle>
+              <CardDescription className="tracking-tight text-md md:text-lg">
+                Permanently delete your account
+              </CardDescription>
             </div>
-          </CardContent>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="destructive"
+                  className="mt-4 md:mt-0 cursor-pointer tracking-tight text-white bg-red-500 hover:bg-red-700 text-md transition-colors duration-300"
+                >
+                  Delete
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-white dark:bg-black border-slate-500">
+                <DialogHeader>
+                  <DialogTitle className="tracking-tight text-lg md:text-xl">
+                    Are you sure?
+                  </DialogTitle>
+                  <DialogDescription className="tracking-tight text-sm md:text-md">
+                    This action is irreversible. Your account will be
+                    permanently deleted.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="mt-4">
+                  <Button
+                    variant="destructive"
+                    onClick={handleDeleteAccount}
+                    disabled={deleteLoading}
+                    className="cursor-pointer tracking-tight text-white bg-red-500 hover:bg-red-700 text-lg transition-colors duration-300"
+                  >
+                    {deleteLoading ? "Deleting..." : "Confirm Delete"}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </CardHeader>
         </Card>
       </div>
     </div>

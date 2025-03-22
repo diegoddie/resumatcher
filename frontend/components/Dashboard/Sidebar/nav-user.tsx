@@ -25,8 +25,8 @@ export function NavUser() {
             <AvatarFallback className="rounded-lg">CN</AvatarFallback>
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-medium">{user?.fullName}</span>
-            <span className="truncate text-xs">
+            <span className="truncate font-medium tracking-tight">{user?.fullName}</span>
+            <span className="truncate text-sm tracking-tight">
               {user?.emailAddresses[0]?.emailAddress || "No email"}
             </span>
           </div>

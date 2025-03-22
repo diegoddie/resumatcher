@@ -69,7 +69,7 @@ const JobPost = () => {
                     <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
                         Job Posts
                     </h1>
-                    <p className="text-muted-foreground">
+                    <p className="text-foreground text-md md:text-lg tracking-tight">
                         View details about the job posts we found for you.
                     </p>
                 </div>
