@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Caveat } from "next/font/google";
+import { Geist, Geist_Mono, Caveat, Montserrat, Lato } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -9,6 +9,17 @@ import { queryClient } from "@/utils/tanstack/queryClient";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const lato = Lato({
+  variable: "--font-lato",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
 });
 
@@ -38,7 +49,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning className="scroll-smooth">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${montserrat.variable} ${lato.variable} antialiased font-montserrat`}
         >
           <QueryClientProvider client={queryClient}>
             <ThemeProvider

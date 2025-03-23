@@ -23,7 +23,7 @@ export default function Hero() {
     })
 
     return () => controls.stop()
-  }, [])
+  }, [matchScore])
 
   const skills = [
     { name: "React", color: "bg-blue-500" },
