@@ -38,7 +38,46 @@ export const metadata: Metadata = {
   title: "Resumatcher - Find Your Perfect Job Match with AI",
   description:
     "Upload your resume and let our AI analyze it to find the most relevant job opportunities with precise match scores.",
-}
+  authors: [{ name: "Resumatcher Team" }],
+  keywords: ["resume", "job search", "AI matching", "career", "employment", "job opportunities"],
+  creator: "Resumatcher",
+  publisher: "Resumatcher",
+  metadataBase: new URL("https://resumatcher.xyz"),
+  openGraph: {
+    title: "Resumatcher - Find Your Perfect Job Match with AI",
+    description:
+      "Upload your resume and let our AI analyze it to find the most relevant job opportunities with precise match scores.",
+    url: "https://resumatcher.xyz",
+    siteName: "Resumatcher",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png", // Assicurati di avere un'immagine grande in public/
+        width: 1200,
+        height: 630,
+        alt: "Resumatcher AI Job Matching",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@yoimdiego",
+    creator: "@yoimdiego",
+    title: "Resumatcher - Find Your Perfect Job Match with AI",
+    description:
+      "Upload your resume and let our AI analyze it to find the most relevant job opportunities with precise match scores.",
+    images: ["/og-image.png"],
+  },
+  robots: "index, follow",
+  alternates: {
+    canonical: "https://resumatcher.xyz",
+  },
+  icons: {
+    icon: "/favicon-32x32.png",
+    apple: "/apple-touch-icon.png",
+  },
+};
+
 
 export default function RootLayout({
   children,
@@ -48,13 +87,6 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning className="scroll-smooth">
-        <head>
-          <script
-            defer
-            src="https://cloud.umami.is/script.js" 
-            data-website-id="e49c834f-9aef-4ca8-9f14-e66a683026b1"
-          />
-        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${montserrat.variable} ${lato.variable} antialiased font-montserrat`}
         >
