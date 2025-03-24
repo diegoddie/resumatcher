@@ -1,25 +1,17 @@
 from datetime import datetime
 import os
-import logging
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from api.models.models import CvSummary, JobSearchRequest
 from api.functions.file_processing import process_cv
-from api.functions.match_score import calculate_match_scores_batch, preprocess_cv
+from api.functions.match_score import calculate_match_score, preprocess_cv
 from api.functions.fetch_jobs import fetch_jobs_from_api
 from api.functions.openai import generate_summary_with_openai
 from api.functions.supabase import user_has_credits, update_credits, save_job_report, save_job_post, create_report_post_association, save_match_score
 from dotenv import load_dotenv
 
 load_dotenv()   
-
-# Configura il logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Resumatcher")
 
@@ -51,43 +43,44 @@ async def search_jobs_and_create_reports(request: JobSearchRequest):
         raise HTTPException(status_code=400, detail="Insufficient credits")
     
     try:
+        print(f"starting fetching jobs at {datetime.now()}")
         jobs = fetch_jobs_from_api(request.role, request.location)
+        print(f"fetched {len(jobs)} jobs at {datetime.now()}")
 
         if not jobs:
             raise HTTPException(status_code=404, detail="No jobs found for the given role and location")
 
+        print(f"saving job report at {datetime.now()}")
         job_report_id = save_job_report(request)
+        print(f"job report saved at {datetime.now()}")
 
         # Pre-process CV data once
         cv_vectors = preprocess_cv(request)
+        print(f"cv vectors preprocessed at {datetime.now()}")
 
-        # Save all jobs first
-        saved_jobs = []
         for job in jobs:
             try:
                 saved_job = save_job_post(job)
+                print(f"job saved at {datetime.now()}")
+
                 if saved_job:
-                    saved_jobs.append(saved_job)
-            except Exception as e:
-                logger.error(f"Error saving job: {str(e)}")
+                    match_score = calculate_match_score(cv_vectors, saved_job)
+                    print(f"match score calculated at {datetime.now()}")
 
-        # Calculate all match scores in batch
-        match_scores = calculate_match_scores_batch(cv_vectors, saved_jobs)
-
-        # Save all match scores and create associations
-        for saved_job, match_score in zip(saved_jobs, match_scores):
-            try:
-                match_score_id = save_match_score(request.user_id, saved_job["id"], job_report_id, match_score)
-                if match_score_id:
-                    create_report_post_association(job_report_id, saved_job["id"])
+                    match_score_id = save_match_score(request.user_id, saved_job["id"], job_report_id, match_score)
+                    print(f"match score saved at {datetime.now()}")
+                
+                    if match_score_id:
+                        create_report_post_association(job_report_id, saved_job["id"])
+                        print(f"report post association created at {datetime.now()}")
             except Exception as e:
-                logger.error(f"Error saving match score: {str(e)}")
+                print(f"Error processing job: {e}")
 
         update_credits(request.user_id)
+        print(f"credits updated at {datetime.now()}")
         return {"message": "Job search and report creation completed successfully"}
 
     except Exception as e:
-        logger.error(f"Error in job search: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error searching jobs: {e}")
 
 if __name__ == "__main__":
