@@ -51,24 +51,17 @@ async def search_jobs_and_create_reports(request: JobSearchRequest):
         raise HTTPException(status_code=400, detail="Insufficient credits")
     
     try:
-        logger.info(f"Starting job search for role={request.role}, location={request.location}")
         jobs = fetch_jobs_from_api(request.role, request.location)
-        logger.info(f"Fetched {len(jobs)} jobs")
 
         if not jobs:
             raise HTTPException(status_code=404, detail="No jobs found for the given role and location")
 
-        logger.info("Saving job report")
         job_report_id = save_job_report(request)
-        logger.info("Job report saved successfully")
 
         # Pre-process CV data once
-        logger.info("Pre-processing CV vectors")
         cv_vectors = preprocess_cv(request)
-        logger.info("CV vectors pre-processed successfully")
 
         # Save all jobs first
-        logger.info("Saving all jobs")
         saved_jobs = []
         for job in jobs:
             try:
@@ -79,12 +72,9 @@ async def search_jobs_and_create_reports(request: JobSearchRequest):
                 logger.error(f"Error saving job: {str(e)}")
 
         # Calculate all match scores in batch
-        logger.info(f"Calculating match scores for {len(saved_jobs)} jobs")
         match_scores = calculate_match_scores_batch(cv_vectors, saved_jobs)
-        logger.info("Match scores calculated successfully")
 
         # Save all match scores and create associations
-        logger.info("Saving match scores and creating associations")
         for saved_job, match_score in zip(saved_jobs, match_scores):
             try:
                 match_score_id = save_match_score(request.user_id, saved_job["id"], job_report_id, match_score)
@@ -94,7 +84,6 @@ async def search_jobs_and_create_reports(request: JobSearchRequest):
                 logger.error(f"Error saving match score: {str(e)}")
 
         update_credits(request.user_id)
-        logger.info("Credits updated successfully")
         return {"message": "Job search and report creation completed successfully"}
 
     except Exception as e:

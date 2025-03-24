@@ -11,6 +11,9 @@ function StepRedirecting() {
           <p className="text-center text-foreground tracking-tight">
             We&apos;re searching for jobs that match your profile...
           </p>
+          <p className="text-center text-foreground tracking-tight">
+            This may take a few minutes...
+          </p>
         </div>
       </CardContent>
     </Card>
