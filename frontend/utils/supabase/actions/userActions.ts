@@ -8,7 +8,7 @@ export async function getUserSubscription({ id }: { id: string }): Promise<UserC
     try {
         const client = await createClerkSupabaseClientSsr();
 
-        const { data, error } = await client.from("subscriptions").select("credits, plan").eq("user_id", id).single();
+        const { data, error } = await client.from("subscriptions").select("credits, plan, end_date, is_active, stripe_subscription_id").eq("user_id", id).single();
 
         if (error) {
             console.error("Error fetching user credits:", error);

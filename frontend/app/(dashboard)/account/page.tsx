@@ -1,5 +1,5 @@
 "use client";
-import { CheckCircle2, Zap, XCircle, Loader2 } from "lucide-react";
+import { CheckCircle2, Zap, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,15 +25,20 @@ import { useRouter } from "next/navigation";
 import { getUserSubscription } from "@/utils/supabase/actions/userActions";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import axios from "axios";
+import { toast } from "sonner";
+import { format } from "date-fns";
+import { enUS } from "date-fns/locale";
 
 function Account() {
   const { user } = useUser();
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [isLoadingCheckout, setIsLoadingCheckout] = useState(false);
 
   const {
     data: subscription,
     isLoading,
-    isError,
+    isError
   } = useQuery({
     queryKey: ["subscription", user?.id],
     queryFn: async () => {
@@ -45,6 +50,10 @@ function Account() {
 
   const router = useRouter();
   const isPro = subscription?.plan === "pro";
+  const endDate = subscription?.end_date ? new Date(subscription.end_date) : null;
+  const formattedEndDate = endDate 
+    ? format(endDate, "d MMMM yyyy", { locale: enUS }) 
+    : null;
   const creditsLeft = subscription?.credits ?? 0;
   const showCreditsLoading = isLoading || !user?.id;
 
@@ -58,6 +67,49 @@ function Account() {
       console.error("Failed to delete account:", error);
     } finally {
       setDeleteLoading(false);
+    }
+  };
+
+  const handleUpgradeClick = async () => {
+    if (!user?.id) {
+      toast.error("You must be logged in to subscribe");
+      return;
+    }
+    
+    setIsLoadingCheckout(true);
+    try {
+      const response = await axios.post('/api/stripe/create-checkout-session', {
+        userId: user.id,
+        priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID
+      });
+      
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred. Please try again later.");
+    } finally {
+      setIsLoadingCheckout(false);
+    }
+  };
+
+  const handleManageSubscription = async () => {
+    if (!user?.id) {
+      toast.error("You must be logged in to manage your subscription");
+      return;
+    }
+    
+    setIsLoadingCheckout(true);
+    try {
+      const response = await axios.post('/api/stripe/create-portal-session', {
+        userId: user.id
+      });
+      
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred. Please try again later.");
+    } finally {
+      setIsLoadingCheckout(false);
     }
   };
 
@@ -164,66 +216,84 @@ function Account() {
           <Card className="w-full md:w-1/2 border-slate-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-xl md:text-2xl tracking-tight">
-                {isPro ? "Back to Free Plan" : "Upgrade to Pro"}
+                {isPro ? "Manage Subscription" : "Upgrade to Pro"}
               </CardTitle>
               <CardDescription className="tracking-tight text-md md:text-lg">
                 {isPro
-                  ? "Go back to the free plan"
+                  ? "Manage your Pro subscription"
                   : "Get more features and unlimited credits."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center space-x-4">
-                <div className="bg-yellow-500/10 p-3 rounded-full">
-                  <Zap className="h-6 w-6 text-yellow-500 " />
+              {showCreditsLoading ? (
+                <div className="flex flex-col items-center justify-center space-y-4 py-8">
+                  <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                  <p className="text-sm text-muted-foreground">Loading subscription info...</p>
                 </div>
-                <div>
-                  <p className="font-medium tracking-tight text-md md:text-lg">
-                    {isPro ? "Free Plan - $0/month" : "Pro Plan - $5.99/month"}
-                  </p>
-                  <p className="text-sm md:text-md text-muted-foreground tracking-tight">
-                    {isPro
-                      ? "Get back to limited Job Reports and limited Match Score visualization"
-                      : "Unlock unlimited Job Reports generation and unlimited job matching scores"}
-                  </p>
-                </div>
-              </div>
-              <ul className="space-y-3">
-                <li className="flex items-center">
-                  {isPro ? (
-                    <XCircle className="mr-2 h-4 w-4 text-red-500" />
-                  ) : (
-                    <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
+              ) : (
+                <>
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-yellow-500/10 p-3 rounded-full">
+                      <Zap className="h-6 w-6 text-yellow-500 " />
+                    </div>
+                    <div>
+                        <p className="font-bold tracking-tight text-md md:text-lg">
+                          {isPro ? "Pro Plan - $5.99/month" : "Pro Plan - $5.99/month"}
+                        </p>
+                        <p className="text-sm md:text-md text-muted-foreground tracking-tight">
+                          {isPro
+                            ? "Access to all features and unlimited credits"
+                            : "Unlock unlimited Job Reports generation and match scores for every job"}
+                        </p>
+                    </div>
+                  </div>
+                  
+                  {!isPro && (
+                    <ul className="space-y-3">
+                      <li className="flex items-center">
+                        <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
+                        <span className="text-sm md:text-md tracking-tight">
+                          Unlimited Job Reports
+                        </span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
+                        <span className="text-sm md:text-md tracking-tight">
+                          Match Score for every job post
+                        </span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
+                        <span className="text-sm md:text-md tracking-tight">
+                          Priority support
+                        </span>
+                      </li>
+                    </ul>
                   )}
-                  <span className="text-sm md:text-md tracking-tight">
-                    Unlimited Job Reports
-                  </span>
-                </li>
-                <li className="flex items-center">
-                  {isPro ? (
-                    <XCircle className="mr-2 h-4 w-4 text-red-500" />
-                  ) : (
-                    <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
+                  
+                  {isPro && formattedEndDate && (
+                    <div className="rounded-md border p-4 bg-slate-50 dark:bg-slate-900">
+                      <div className="font-medium">Active Subscription</div>
+                      <div className="text-sm text-muted-foreground mt-1">
+                        Your subscription will automatically renew on {formattedEndDate}.
+                      </div>
+                    </div>
                   )}
-                  <span className="text-sm md:text-md tracking-tight">
-                    Match Score for every job post
-                  </span>
-                </li>
-                <li className="flex items-center">
-                  {isPro ? (
-                    <XCircle className="mr-2 h-4 w-4 text-red-500" />
-                  ) : (
-                    <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
-                  )}
-                  <span className="text-sm md:text-md tracking-tight">
-                    Priority support
-                  </span>
-                </li>
-              </ul>
+                </>
+              )}
             </CardContent>
             <CardFooter>
-              <Button className="w-full cursor-pointer tracking-tight text-white bg-[#3b82f6] hover:bg-[#2563eb] text-lg transition-colors duration-300">
-                {isPro ? "Back to Free Plan" : "Upgrade to Pro"}
+              <Button 
+                className="w-full cursor-pointer tracking-tight text-white bg-[#3b82f6] hover:bg-[#2563eb] text-lg transition-colors duration-300"
+                onClick={isPro ? handleManageSubscription : handleUpgradeClick}
+                disabled={isLoadingCheckout || showCreditsLoading}
+              >
+                {isLoadingCheckout ? (
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </div>
+                ) : isPro ? "Manage Subscription" : "Upgrade to Pro"}
               </Button>
             </CardFooter>
           </Card>

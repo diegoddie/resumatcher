@@ -10,6 +10,9 @@ export type JobReportPost = Database["public"]["Tables"]["job_report_posts"]["Ro
 export type UserCreditsInfo = {
     credits: number;
     plan: string;
+    end_date?: string;
+    is_active?: boolean;
+    stripe_subscription_id?: string;
 };
 
 export type MatchScoreInfo = {

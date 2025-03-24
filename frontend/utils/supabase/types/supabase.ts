@@ -206,10 +206,10 @@ export type Database = {
           end_date: string | null
           id: string
           is_active: boolean
-          payment_id: string | null
-          payment_provider: string | null
           plan: string
           start_date: string | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
           updated_at: string | null
           user_id: string
         }
@@ -219,10 +219,10 @@ export type Database = {
           end_date?: string | null
           id?: string
           is_active?: boolean
-          payment_id?: string | null
-          payment_provider?: string | null
           plan?: string
           start_date?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
           updated_at?: string | null
           user_id: string
         }
@@ -232,10 +232,10 @@ export type Database = {
           end_date?: string | null
           id?: string
           is_active?: boolean
-          payment_id?: string | null
-          payment_provider?: string | null
           plan?: string
           start_date?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
           updated_at?: string | null
           user_id?: string
         }
