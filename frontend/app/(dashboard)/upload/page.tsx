@@ -160,7 +160,7 @@ function UploadCv() {
         // Invalida la cache per la query dei crediti/subscription
         queryClient.invalidateQueries({ queryKey: ["subscription", user?.id] });
         
-        toast.info("Job search completed successfully, redirecting to job reports page", {
+        toast.success("Job search completed successfully, redirecting to job reports page", {
           richColors: true,
           duration: 4000,
         });
