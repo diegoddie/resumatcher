@@ -48,6 +48,13 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning className="scroll-smooth">
+        <head>
+          <script
+            defer
+            src="https://cloud.umami.is/script.js" 
+            data-website-id="e49c834f-9aef-4ca8-9f14-e66a683026b1"
+          />
+        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${montserrat.variable} ${lato.variable} antialiased font-montserrat`}
         >
