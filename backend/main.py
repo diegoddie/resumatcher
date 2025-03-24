@@ -16,7 +16,7 @@ app = FastAPI(title="Resumatcher")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  
+    allow_origins=["http://localhost:3000", "https://resumatcher.vercel.app", "https://resumatcher.xyz", "https://www.resumatcher.xyz"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

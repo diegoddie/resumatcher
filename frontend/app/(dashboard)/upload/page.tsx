@@ -90,7 +90,7 @@ function UploadCv() {
     formData.append('user_id', user?.id || "");
     
     try {
-      const response = await axios.post('http://localhost:8000/summarize', formData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/summarize`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -147,7 +147,7 @@ function UploadCv() {
         filename: file.name || "uploaded_cv.pdf"
       };
 
-      const response = await axios.post("http://localhost:8000/search", jobSearchRequest, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/search`, jobSearchRequest, {
         headers: {
           "Content-Type": "application/json",
         },
