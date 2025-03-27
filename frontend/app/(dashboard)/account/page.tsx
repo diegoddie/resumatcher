@@ -174,7 +174,7 @@ function Account() {
                           {isPro ? "Pro" : "Free"} plan
                         </p>
                       </div>
-                      <div className="flex flex-col md:flex-row gap-2">
+                      <div className="flex flex-col xl:flex-row gap-2">
                         <Badge
                           variant="outline"
                           className="ml-auto tracking-tight border-slate-500"

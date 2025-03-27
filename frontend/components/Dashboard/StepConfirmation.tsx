@@ -60,6 +60,23 @@ function StepConfirmation({
     });
   };
 
+  const handleYearsExperienceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Remove leading zeros and ensure it's a positive number
+    const value = e.target.value.replace(/^0+/, '');
+    
+    // If empty, default to empty string (will be validated on save)
+    if (value === '') {
+      setEditedData({ ...editedData, years_experience: 0 });
+      return;
+    }
+    
+    // Parse as integer and ensure it's not negative
+    const numValue = parseInt(value, 10);
+    if (numValue >= 0) {
+      setEditedData({ ...editedData, years_experience: numValue });
+    }
+  };
+
   return (
     <Card className="w-full border border-slate-500">
       <CardContent className="">
@@ -109,13 +126,9 @@ function StepConfirmation({
                 {isEditing ? (
                   <Input
                     type="number"
-                    value={editedData.years_experience}
-                    onChange={(e) =>
-                      setEditedData({
-                        ...editedData,
-                        years_experience: Number.parseInt(e.target.value) || 0,
-                      })
-                    }
+                    value={editedData.years_experience || ""}
+                    onChange={handleYearsExperienceChange}
+                    min="0"
                     placeholder="Years of experience"
                   />
                 ) : (
@@ -222,8 +235,7 @@ function StepConfirmation({
         {isEditing ? (
           <>
             <Button
-              variant="outline"
-              className="w-1/2 hover:border-none hover:text-white bg-red-500 hover:bg-red-600 text-white cursor-pointer tracking-tight text-md transition-colors duration-300"
+              className="w-1/2 border-0 bg-red-500 hover:bg-red-600 text-white cursor-pointer tracking-tight text-md transition-colors duration-300"
               onClick={() => setIsEditing(false)}
             >
               Cancel
@@ -241,7 +253,7 @@ function StepConfirmation({
               <PencilIcon className="h-4 w-4" />
               Edit Information
             </Button>
-            <Button className="cursor-pointer bg-green-500 hover:bg-green-600 text-white tracking-tight text-md transition-colors duration-300" onClick={onConfirm}>
+            <Button className="cursor-pointer bg-green-500 hover:bg-green-600 text-white cursor-pointer tracking-tight text-md transition-colors duration-300" onClick={onConfirm}>
               <Check className="h-4 w-4" />
               Confirm and Find Jobs
             </Button>
