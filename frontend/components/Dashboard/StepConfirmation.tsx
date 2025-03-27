@@ -253,7 +253,7 @@ function StepConfirmation({
               <PencilIcon className="h-4 w-4" />
               Edit Information
             </Button>
-            <Button className="cursor-pointer bg-green-500 hover:bg-green-600 text-white cursor-pointer tracking-tight text-md transition-colors duration-300" onClick={onConfirm}>
+            <Button className="bg-green-500 hover:bg-green-600 text-white cursor-pointer tracking-tight text-md transition-colors duration-300" onClick={onConfirm}>
               <Check className="h-4 w-4" />
               Confirm and Find Jobs
             </Button>
