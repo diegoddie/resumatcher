@@ -30,7 +30,7 @@ export default function DashboardPage() {
     },
     enabled: !!user?.id,
   });
-
+  
   const totalCredits = 3;
   const isPro = subscription?.plan === "pro";
   const creditsLeft = subscription?.credits ?? 0;

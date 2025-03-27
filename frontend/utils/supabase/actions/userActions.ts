@@ -119,3 +119,52 @@ export async function getMatchScoreForJobPost({ jobPostId, jobReportId, userId }
         return null;
     }
 }
+
+export async function disableUser({ id }: { id: string }): Promise<boolean> {
+    if (!id) return false;
+    try {
+        const client = await createClerkSupabaseClientSsr();
+
+        // Aggiorna l'utente
+        const { error: userError } = await client
+            .from("users")
+            .update({ is_active: false })
+            .eq("id", id);
+
+        if (userError) {
+            console.error("Error disabling user:", userError);
+            return false;
+        }
+
+        // Verifica che l'utente abbia una subscription
+        const { data, error: checkError } = await client
+            .from("subscriptions")
+            .select("user_id")
+            .eq("user_id", id);
+
+        if (checkError) {
+            console.error("Error checking subscription:", checkError);
+            return false;
+        }
+
+        // Se l'utente ha una subscription, aggiornala
+        if (data && data.length > 0) {
+            const { error: subscriptionError } = await client
+                .from("subscriptions")
+                .update({ is_active: false })
+                .eq("user_id", id);
+
+            if (subscriptionError) {
+                console.error("Error disabling subscription:", subscriptionError);
+                return false;
+            }
+        } else {
+            console.log("No subscription found for user:", id);
+        }
+        
+        return true;
+    } catch (e) {
+        console.error("Exception disabling user:", e);
+        return false;
+    }
+}

@@ -94,6 +94,11 @@ CREATE POLICY "Users can delete own profile"
   FOR DELETE TO authenticated
   USING (requesting_user_id() = id);
 
+CREATE POLICY "Users can update own subscription"
+  ON public.subscriptions
+  FOR UPDATE TO authenticated
+  USING (requesting_user_id() = user_id);
+
 -- Policy for job_reports table - users can manage their own reports
 CREATE POLICY "Users can view own job reports" 
   ON public.job_reports 

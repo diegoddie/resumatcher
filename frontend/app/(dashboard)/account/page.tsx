@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import {
   DialogContent,
   DialogDescription,
@@ -22,7 +22,7 @@ import {
 import { DialogTrigger } from "@/components/ui/dialog";
 import { Dialog } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-import { getUserSubscription } from "@/utils/supabase/actions/userActions";
+import { disableUser, getUserSubscription } from "@/utils/supabase/actions/userActions";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import axios from "axios";
@@ -32,7 +32,8 @@ import { enUS } from "date-fns/locale";
 
 function Account() {
   const { user } = useUser();
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const { signOut } = useClerk();
+  const [disableLoading, setDisableLoading] = useState(false);
   const [isLoadingCheckout, setIsLoadingCheckout] = useState(false);
 
   const {
@@ -57,16 +58,18 @@ function Account() {
   const creditsLeft = subscription?.credits ?? 0;
   const showCreditsLoading = isLoading || !user?.id;
 
-  const handleDeleteAccount = async () => {
-    setDeleteLoading(true);
+  const handleDisableAccount = async () => {
+    setDisableLoading(true);
 
     try {
-      await user?.delete();
+      if (!user?.id) return;
+      await disableUser({ id: user.id });
+      await signOut();
       router.push("/");
     } catch (error) {
-      console.error("Failed to delete account:", error);
+      console.error("Failed to disable account:", error);
     } finally {
-      setDeleteLoading(false);
+      setDisableLoading(false);
     }
   };
 
@@ -302,10 +305,10 @@ function Account() {
           <CardHeader className="flex flex-col md:flex-row justify-between md:items-center">
             <div className="flex flex-col">
               <CardTitle className="flex items-center gap-2 text-xl md:text-2xl tracking-tight">
-                Delete Account
+                Disable Account
               </CardTitle>
               <CardDescription className="tracking-tight text-md md:text-lg">
-                Permanently delete your account
+                Temporarily disable your account
               </CardDescription>
             </div>
             <Dialog>
@@ -314,7 +317,7 @@ function Account() {
                   variant="destructive"
                   className="mt-4 md:mt-0 cursor-pointer tracking-tight text-white bg-red-500 hover:bg-red-700 text-md transition-colors duration-300"
                 >
-                  Delete
+                  Disable
                 </Button>
               </DialogTrigger>
               <DialogContent className="bg-white dark:bg-black border-slate-500">
@@ -324,17 +327,17 @@ function Account() {
                   </DialogTitle>
                   <DialogDescription className="tracking-tight text-sm md:text-md">
                     This action is irreversible. Your account will be
-                    permanently deleted.
+                    temporarily disabled.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="mt-4">
                   <Button
                     variant="destructive"
-                    onClick={handleDeleteAccount}
-                    disabled={deleteLoading}
+                    onClick={handleDisableAccount}
+                    disabled={disableLoading}
                     className="cursor-pointer tracking-tight text-white bg-red-500 hover:bg-red-700 text-lg transition-colors duration-300"
                   >
-                    {deleteLoading ? "Deleting..." : "Confirm Delete"}
+                    {disableLoading ? "Disabling..." : "Confirm Disable"}
                   </Button>
                 </DialogFooter>
               </DialogContent>

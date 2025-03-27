@@ -124,6 +124,66 @@ export async function POST(req: Request){
 
         return new Response('User deleted successfully', { status: 200 })
       }
+
+      case 'session.created': {
+        const { user_id } = evt.data;
+      
+        // Prima verifica lo stato attuale dell'utente
+        const { data: userData, error: fetchUserError } = await supabase
+          .from('users')
+          .select('is_active')
+          .eq('id', user_id)
+          .single();
+        
+        if (fetchUserError) {
+          console.error('Error fetching user status:', fetchUserError);
+          return new Response(`Error fetching user status: ${fetchUserError.message}`, { status: 500 });
+        }
+        
+        // Verifica anche lo stato della subscription
+        const { data: subscriptionData, error: fetchSubError } = await supabase
+          .from('subscriptions')
+          .select('is_active')
+          .eq('user_id', user_id)
+          .single();
+        
+        if (fetchSubError) {
+          console.error('Error fetching subscription status:', fetchSubError);
+          return new Response(`Error fetching subscription status: ${fetchSubError.message}`, { status: 500 });
+        }
+
+        // Aggiorna l'utente se è disattivato
+        if (userData && userData.is_active === false) {
+          const { error: updateUserError } = await supabase
+            .from('users')
+            .update({ is_active: true })
+            .eq('id', user_id);
+          
+          if (updateUserError) {
+            console.error('Error updating user in Supabase:', updateUserError);
+            return new Response(`Error updating user: ${updateUserError.message}`, { status: 500 });
+          }
+          
+          console.log(`User ${user_id} successfully reactivated`);
+        }
+        
+        // Aggiorna la subscription se esiste ed è disattivata
+        if (subscriptionData && subscriptionData.is_active === false) {
+          const { error: updateSubError } = await supabase
+            .from('subscriptions')
+            .update({ is_active: true })
+            .eq('user_id', user_id);
+          
+          if (updateSubError) {
+            console.error('Error updating subscription in Supabase:', updateSubError);
+            return new Response(`Error updating subscription: ${updateSubError.message}`, { status: 500 });
+          }
+          
+          console.log(`Subscription for user ${user_id} successfully reactivated`);
+        }
+        
+        return new Response('Session processed successfully', { status: 200 });
+      }
       
       default:
         // For any other event types, acknowledge receipt
