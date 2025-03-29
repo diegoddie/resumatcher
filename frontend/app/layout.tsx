@@ -47,12 +47,12 @@ export const metadata: Metadata = {
     title: "Resumatcher - Find Your Perfect Job Match with AI",
     description:
       "Upload your resume and let our AI analyze it to find the most relevant job opportunities with precise match scores.",
-    url: "https://resumatcher.xyz",
+    url: "https://www.resumatcher.xyz",
     siteName: "Resumatcher",
     type: "website",
     images: [
       {
-        url: "/og-image.png", // Assicurati di avere un'immagine grande in public/
+        url: "/og-image.jpg", // Assicurati di avere un'immagine grande in public/
         width: 1200,
         height: 630,
         alt: "Resumatcher AI Job Matching",
@@ -66,11 +66,11 @@ export const metadata: Metadata = {
     title: "Resumatcher - Find Your Perfect Job Match with AI",
     description:
       "Upload your resume and let our AI analyze it to find the most relevant job opportunities with precise match scores.",
-    images: ["/og-image.png"],
+    images: ["/og-image.jpg"],
   },
   robots: "index, follow",
   alternates: {
-    canonical: "https://resumatcher.xyz",
+    canonical: "https://www.resumatcher.xyz",
   },
   icons: {
     icon: "/favicon-32x32.png",
