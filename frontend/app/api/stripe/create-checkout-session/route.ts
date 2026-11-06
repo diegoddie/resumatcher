@@ -26,9 +26,16 @@ export async function POST() {
     
     // Se esiste già una sottoscrizione, recuperiamo il customerId da Stripe
     if (subscriptionData?.stripe_subscription_id) {
-      const subscription = await stripe.subscriptions.retrieve(subscriptionData.stripe_subscription_id);
-      customerId = subscription.customer as string;
-    } else {
+      try {
+        const subscription = await stripe.subscriptions.retrieve(subscriptionData.stripe_subscription_id);
+        customerId = subscription.customer as string;
+      } catch (error) {
+        // Sottoscrizione di un altro account Stripe (es. account precedente): si riparte con un nuovo cliente
+        console.warn("Stripe subscription not found, creating a new customer:", error);
+      }
+    }
+
+    if (!customerId) {
       // Se non esiste, creiamo un nuovo cliente Stripe
       const { data: userData } = await supabase
         .from("users")

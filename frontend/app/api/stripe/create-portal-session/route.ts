@@ -33,8 +33,17 @@ export async function POST() {
     }
 
     // Recupera il customer ID dalla sottoscrizione Stripe
-    const subscription = await stripe.subscriptions.retrieve(subscriptionData.stripe_subscription_id);
-    const customerId = subscription.customer as string;
+    let customerId: string;
+    try {
+      const subscription = await stripe.subscriptions.retrieve(subscriptionData.stripe_subscription_id);
+      customerId = subscription.customer as string;
+    } catch {
+      // Sottoscrizione di un altro account Stripe (es. account precedente)
+      return NextResponse.json(
+        { error: "No subscription found for this user" },
+        { status: 404 }
+      );
+    }
 
     // Crea la sessione del portale clienti
     const session = await stripe.billingPortal.sessions.create({
