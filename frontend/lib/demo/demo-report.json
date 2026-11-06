@@ -1,0 +1,408 @@
+{
+  "generatedAt": "2026-11-06",
+  "candidate": {
+    "role": "Frontend Developer",
+    "location": "Milano",
+    "years_experience": 4,
+    "skills": [
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Redux",
+      "HTML",
+      "CSS",
+      "Tailwind CSS",
+      "Jest",
+      "Git",
+      "REST APIs",
+      "Figma"
+    ],
+    "summary": "Frontend developer with 4 years of experience building React/Next.js web apps for e-commerce and fintech."
+  },
+  "jobs": [
+    {
+      "jobPost": {
+        "id": "dzdOdm5ZYzI2NFY1ZXFjVUFBQUFBQT09OkVzd0JDb3dCUVVSRVlsZGxXWHB0YlhaTGVYWkVkVE0yV1hjMGJGRnBiMHhhT0U1YVpEQnJXRTE0ZWtkUGFsWmhhVXhzWkU1aE9VeEVPRVJIVEdkNlUzZFFSa1ppVWxKNFYzTXhWV3hyVTI1a1NHRlRhMjlZYVVoRFkwRlFTSE5aV0RodldWTm1SMmxXWlZCRFVsODBjWFJOUVZJeWJtaEZRbEJKTVV0bk0ySnNYeTA0U0Zsck1rUklWelpyUzBoZk0wY1NGM1JuVEhWaGRqTmZSRWwyVW5kamMxQjRjRmRuTkZGakdpSkJTRTR3UlRkRlRtSnRNelpuTUhkdlNFNVhWSEJWTTNKdVFuUkpMVEJpV0dobg",
+        "role": "Junior Frontend Developer – React / Next.js",
+        "company": "Gilda S.r.l.",
+        "location": "Milano MI",
+        "salary": null,
+        "url": "https://it.indeed.com/viewjob?jk=e078000a121020bb",
+        "description": "Gilda SRL, realtà innovativa con sede a Milano, cerca un Junior Frontend Developer con competenze in JavaScript, React e Next.js per unirsi al team di sviluppo di Luluu, una piattaforma software avanzata che integra intelligenza artificiale e strumenti digitali per la gestione e l'ottimizzazione del",
+        "requirements": [
+          "JavaScript",
+          "React",
+          "Next.js",
+          "HTML5",
+          "CSS3",
+          "REST API",
+          "Git",
+          "English"
+        ]
+      },
+      "matchScore": 84,
+      "matchDetails": {
+        "matched_skills": [
+          "JavaScript",
+          "React",
+          "Next.js",
+          "HTML5",
+          "CSS3",
+          "REST API",
+          "Git"
+        ],
+        "missing_skills": [
+          "English"
+        ],
+        "skills_fit": 88,
+        "role_fit": 80,
+        "seniority_fit": 70,
+        "location_fit": 100,
+        "reason": "The candidate matches all core technical requirements except the required English proficiency, giving a high skills fit (88). Their background as a Frontend Developer aligns well with the junior role, though the 4 years of experience is slightly above the junior level, resulting in moderate seniority fit."
+      }
+    },
+    {
+      "jobPost": {
+        "id": "RkYzejFSS1F3RjZkcnhoTUFBQUFBQT09OkVzd0JDb3dCUVVSRVlsZGxZalZ6Y1ROV2FEZ3lka2RTZVVGc2RXVTFVM0JUVVc1SlVHTnRUSGxuT1hkNVkyMXRRakZQY0Y5elRFOHlNVVEwWjJGU1dHVTRORmR3TURsTVRqWlNPRTFFVEZGeE9HWmtiemN5UmtJeFZWcFBNMmwzTlMxZmNIUTJTR05wV1RnMlRVTnpTMTlOYlhkSlFubEZhVUpzUlZsWVFXOVNNRnAwZG5WWFVHdFphM2htZHpGTmNVSVNGM1JuVEhWaGRqTmZSRWwyVW5kamMxQjRjRmRuTkZGakdpSkJTRTR3UlRkSFVIWnVkVFpIYUZCMFlsbHFZM0ZvTVc4MlVFcHZUR3A0VlZOQg",
+        "role": "Sviluppatore Front-End - €23.000 - €24.000 All'Anno (Milano)",
+        "company": "Adecco Italia",
+        "location": "Milano MI",
+        "salary": null,
+        "url": "https://www.jobijoba.it/annunci-di-lavoro/13/ba73765eb725896e68dd1eda0fbf1275",
+        "description": "Per un nostro cliente esperto nella consulenza informatica stiamo cercando un/una Frontend Developer con esperienza in Angular da inserire nel team di sviluppo.Competenze richieste:Esperienza di almeno 6 mesi nel ruoloEsperienza nello sviluppo frontend con AngularBuona padronanza di HTML5 e CSS3Fami",
+        "requirements": [
+          "Angular",
+          "HTML5",
+          "CSS3",
+          "REST APIs"
+        ]
+      },
+      "matchScore": 83,
+      "matchDetails": {
+        "matched_skills": [
+          "HTML5",
+          "CSS3",
+          "REST APIs"
+        ],
+        "missing_skills": [
+          "Angular"
+        ],
+        "skills_fit": 75,
+        "role_fit": 90,
+        "seniority_fit": 85,
+        "location_fit": 100,
+        "reason": "The candidate matches most of the hard‑skill requirements (HTML, CSS, REST) but lacks Angular, the core technology for this role; overall fit is strong in role and location, with a slight seniority penalty for being over‑qualified."
+      }
+    },
+    {
+      "jobPost": {
+        "id": "TVhlaWkya2RuaEwwZEs3akFBQUFBQT09OkVzd0JDb3dCUVVSRVlsZGxXV2hrU0Y5UlluQlhVR05hVWprNFR6RnNXVTFqWDJJeGFqaE9WSHBzZFhWNFpIRlNlRkJMTlRCSFRrSlVSMDFVWkVZelVGaGtaM05oZUhaSVNqWXpaa05pTWsxNFJuQndZVWQzTWkxMU1VaEZlV2xwVFdoU09HTmhWMnhDV1Roa1NrUlNURmt5V1doTlptZE5OVWMxVG5OVExVZHdNRzlGWnpoamJWZGpZME51UjNScVowVVNGM1JuVEhWaGRqTmZSRWwyVW5kamMxQjRjRmRuTkZGakdpSkJTRTR3UlRkR05FWjFVWFZJUWxGeFZVTTVaME01WlMxck1tODROR2RxYTJsQg",
+        "role": "Frontend Developer (React)",
+        "company": "Extia",
+        "location": "Milano MI",
+        "salary": null,
+        "url": "https://it.linkedin.com/jobs/view/frontend-developer-react-at-extia-4478994161",
+        "description": "📣 Vuoi entrare a far parte di un'azienda che mette le persone al centro delle sue priorità? Ti stiamo aspettando in Extia!\n\nDal 2007 Extia, società di consulenza IT, propone un approccio unico nel suo settore, coniugando benessere sul lavoro e performance. Un modello di successo: oltre 3.000 \"Extian",
+        "requirements": [
+          "React",
+          "Next.js",
+          "TypeScript",
+          "REST APIs",
+          "DDD",
+          "Event-Driven",
+          "Jest",
+          "DevOps"
+        ]
+      },
+      "matchScore": 77,
+      "matchDetails": {
+        "matched_skills": [
+          "React",
+          "Next.js",
+          "TypeScript",
+          "REST APIs",
+          "Jest"
+        ],
+        "missing_skills": [
+          "DDD",
+          "Event-Driven",
+          "DevOps"
+        ],
+        "skills_fit": 63,
+        "role_fit": 90,
+        "seniority_fit": 85,
+        "location_fit": 100,
+        "reason": "The candidate matches most core frontend technologies (React, Next.js, TypeScript, REST APIs, Jest) but lacks the backend‑oriented concepts (DDD, Event‑Driven) and explicit DevOps experience, leading to a moderate skills fit; role, seniority and location are a strong match."
+      }
+    },
+    {
+      "jobPost": {
+        "id": "VFNyOHlxc09kLVpiRVE2cUFBQUFBQT09OkVzd0JDb3dCUVVSRVlsZGxXVkZIWkhJek1VMU9abVpIUWtod1UzVnFVVVJVY1VrMlMxUTJWVTk2WXpkQmIyNVJiRmxQYlZCWk5saGhVMkUyYlVwNmJHWnhXRVZOTFRrM2NXNHdWbmx4VUZGdVlWOVlPRU41ZEUxM09VTmFSVlY2VTB4TlVGUjBRWEpLWDB0U2NYRmZaek00UldGMlFYSnpOMVpZU1VneVozTlliVkJpYzI5UmNVUkJRMFZ5UkhwMlJtOFNGM1JuVEhWaGRqTmZSRWwyVW5kamMxQjRjRmRuTkZGakdpSkJTRTR3UlRkRlMzVkplblpMWlRGNWJIaG5VSFZxUjNKR1RHbEllWGxwWm5OMw",
+        "role": "Programmatore Frontend",
+        "company": "People Lab",
+        "location": "Milano MI",
+        "salary": null,
+        "url": "https://it.jooble.org/jdp/143084213555985972",
+        "description": "Department: Frontend DevLocation: MilanoWork mode: IbridoLevel: MiddleLavorerai su progetti reali in ambito Retail, Finance, Insurance, Telco e Industria, sia nella nostra software factory che direttamente presso i clienti. Stack moderno, team di diverse dimensioni, ma sempre collaborativo.Cosa cerc",
+        "requirements": [
+          "JavaScript",
+          "TypeScript",
+          "React",
+          "Vue",
+          "Angular",
+          "Agile",
+          "Backend development",
+          "English"
+        ]
+      },
+      "matchScore": 65,
+      "matchDetails": {
+        "matched_skills": [
+          "JavaScript",
+          "TypeScript",
+          "React"
+        ],
+        "missing_skills": [
+          "Vue",
+          "Angular",
+          "Agile",
+          "Backend development",
+          "English"
+        ],
+        "skills_fit": 40,
+        "role_fit": 85,
+        "seniority_fit": 90,
+        "location_fit": 100,
+        "reason": "The candidate matches the core frontend stack (JS/TS/React) and has the required 2+ years experience, but lacks other frameworks, Agile experience, backend exposure, and English proficiency, resulting in a moderate skills fit while role and seniority fit well."
+      }
+    },
+    {
+      "jobPost": {
+        "id": "aFBSUFV2SEtERTY1R2c4OUFBQUFBQT09OkVzd0JDb3dCUVVSRVlsZGxXbk5rTFZGU1IxTm5PVWhxVm1WYWVtUmZXbkV3VFd4bFlYaHNhbk54VFVOaGNrMDVWRWhqYVdNeVJHVTJaRlpITTBwc2QweEtVRTh0V1c1R2NXcEVWVGsxVWpCMmIyaHZkSHBhU1ZOR1NHRmtVamRWUkdwc1NuZHRVMmxhUWxacmFIcDFjRGxpV0Zab1ptbzJVRFEwZDI5TE56WllPRXBEY2xsUmJqQlNiemt4WkdwTVgzY1NGM1JuVEhWaGRqTmZSRWwyVW5kamMxQjRjRmRuTkZGakdpSkJTRTR3UlRkSVpVY3pXWHBxTTBGV1FqVmZUVmhTZDNscGIybEVTRUZRWm5GUg",
+        "role": "Front End Developer with AI-Driven UI",
+        "company": "ML ENGINE S.R.L.",
+        "location": "Milano",
+        "salary": null,
+        "url": "https://it.trabajo.org/offerta-2264-2b387b27a9554a45a339a094788a787d",
+        "description": "ML ENGINE S.R.L. cerca un Front End Developer da inserire nel team di sviluppo per creare interfacce web moderne e integrare strumenti IA come supporto allo sviluppo software.\nIl candidato dovrà tradurre specifiche funzionali in istruzioni chiare per l'AI e collaborare con i colleghi per fornire sol",
+        "requirements": [
+          "React",
+          "Angular",
+          "Node.js",
+          "Docker",
+          "GitHub"
+        ]
+      },
+      "matchScore": 63,
+      "matchDetails": {
+        "matched_skills": [
+          "React",
+          "GitHub"
+        ],
+        "missing_skills": [
+          "Angular",
+          "Node.js",
+          "Docker",
+          "AI for programming"
+        ],
+        "skills_fit": 40,
+        "role_fit": 80,
+        "seniority_fit": 85,
+        "location_fit": 100,
+        "reason": "The candidate matches the core Front‑End skill (React) and has version‑control experience (Git/GitHub), but lacks Angular, Node.js, Docker and AI‑driven programming experience, giving a moderate skills fit; overall role and seniority alignment are good and the location matches exactly."
+      }
+    },
+    {
+      "jobPost": {
+        "id": "T0d1Z1J1T3I2NDBhbHZTUEFBQUFBQT09OkVzd0JDb3dCUVVSRVlsZGxXblI1YTJSNVMyMHdTbXRKWm5wRVRFbDBTMnhwUnpsa1JYWmhiWFYzVFVNeldqaE1NMDkyTnpOS2RXZzJXazB5Y3paTlUzSktVVUp6WjNac1JVbDFNakpXTUMxM2RUUnRjRWxhT1RnMmRYSm1VMk5FWDA1c1EyVkVRbTFhVm5SSloxOXRSMVIzV1VSZmNVZHZVR3RwTjJSeFpUZEtSbko0Y0RkRlVUWllkemhRVWtKRkxVRVNGM1JuVEhWaGRqTmZSRWwyVW5kamMxQjRjRmRuTkZGakdpSkJTRTR3UlRkSE1EQkdSRGgxU1hadVdVcElNbWR6UlZRemMxTkZPSEZKZEhGUg",
+        "role": "Backend Developer / Frontend Developer – Categorie Protette L. 68/99",
+        "company": "Hays",
+        "location": "Milano MI",
+        "salary": null,
+        "url": "https://it.linkedin.com/jobs/view/backend-developer-frontend-developer-%E2%80%93-categorie-protette-l-68-99-at-hays-4485082270",
+        "description": "Categoria Protetta Art.1 Milano o Torino\n\nLa tua nuova azienda\nPer una strutturata realtà di consulenza IT specializzata nel settore Finance, con particolare focus sui mercati Banking e Insurance, siamo alla ricerca di Backend Developer e Frontend Developer appartenenti alle Categorie Protette L. 68",
+        "requirements": [
+          "Java",
+          "Spring Boot",
+          "REST API",
+          "SQL",
+          "JavaScript",
+          "TypeScript",
+          "React",
+          "Angular"
+        ]
+      },
+      "matchScore": 55,
+      "matchDetails": {
+        "matched_skills": [
+          "JavaScript",
+          "TypeScript",
+          "React"
+        ],
+        "missing_skills": [
+          "Java",
+          "Spring Boot",
+          "SQL",
+          "REST API",
+          "Angular"
+        ],
+        "skills_fit": 38,
+        "role_fit": 60,
+        "seniority_fit": 75,
+        "location_fit": 100,
+        "reason": "The candidate matches three of the eight key technical requirements (JS, TS, React) and lacks core backend skills, giving a modest skills fit; their frontend background aligns reasonably with the role, while seniority and location are good matches."
+      }
+    },
+    {
+      "jobPost": {
+        "id": "OG5Ia1M1SVRxaXVDWDRJYUFBQUFBQT09OkVzd0JDb3dCUVVSRVlsZGxXaTFrVUdvdE1FOHlURVJGWnpFd1ZtOXdTMjlKVFhSUGJXdHNNVTlLTTFGT1oxOW5YemhLT1ZablMxVnRka1JzYmxkaU5VaEpZME42WVVsZldWbFhTazFhWlZCRE5FTlVVVmM1TWt4Q2VFcFNSakZoUVhNeWRVbFJOREZpWkdwVVpETTFaR1UzVW01SGJIa3dTR2c0UVVGQ2JqQXlUMmhpYlRGMlZVMVVWMEV6ZEhVeGJuQVNGM1JuVEhWaGRqTmZSRWwyVW5kamMxQjRjRmRuTkZGakdpSkJTRTR3UlRkSVJITlZaWFkzV0hjd2FuTlZPVXhDVEcxSmQxRlNRbm94ZVdaQg",
+        "role": "Senior Frontend Developer – JavaScript / TypeScript",
+        "company": "Fixup",
+        "location": "Milano MI",
+        "salary": null,
+        "url": "https://www.jobijoba.it/annunci-di-lavoro/13/2d52c2418abae4cfd07a244868e74b3e",
+        "description": "Ti piacerebbe progettare interfacce complesse, dashboard real-time e applicazioni web utilizzate da operatori professionali durante eventi internazionali?\nIn Fixup sviluppiamo piattaforme software proprietarie che combinano gestione di eventi sportivi, sistemi di tracking GPS, telecomunicazioni e an",
+        "requirements": [
+          "JavaScript",
+          "TypeScript",
+          "React",
+          "Frontend architecture",
+          "Real‑time data handling",
+          "Mapping/GPS integration",
+          "Performance optimization"
+        ]
+      },
+      "matchScore": 54,
+      "matchDetails": {
+        "matched_skills": [
+          "JavaScript",
+          "TypeScript",
+          "React"
+        ],
+        "missing_skills": [
+          "Frontend architecture",
+          "Real‑time data handling",
+          "Mapping/GPS integration",
+          "Performance optimization"
+        ],
+        "skills_fit": 45,
+        "role_fit": 60,
+        "seniority_fit": 40,
+        "location_fit": 100,
+        "reason": "The candidate matches the core JavaScript/TypeScript/React stack but lacks experience with scalable frontend architecture, real‑time and mapping features required for a senior role, and has only 4 years of experience for a senior position."
+      }
+    },
+    {
+      "jobPost": {
+        "id": "RW44YVlSRWZCdUZZYW1oSEFBQUFBQT09OkVzd0JDb3dCUVVSRVlsZGxXV1UxVFhkTFUxQTNiVWRTWVVKemRreFJZbUZHTlhaZlRHdHFiR3hGTlZWd2IwOWphWFJDVEc5d1RqQTFURE5CU1ZWbmFGQlNUbmhFYzBGM2VVOUJjMnh3ZGpaVFptOU9kblJYYkdSM1pYTkpVVzFvZFcxVE1sbEJSRzVMYkdkeWRVOTZiSHAzU0ZONWRUbExVMlJKYm00M1VYTjFiMHRmUXpseWVXSllNMlp4WmxWamFHRVNGM1JuVEhWaGRqTmZSRWwyVW5kamMxQjRjRmRuTkZGakdpSkJTRTR3UlRkR1JtUk5PV3BWWVdSTVJrNVdNRkJNWmxZek5VRjVkVWh4TTB0Ug",
+        "role": "Sviluppatore C Backend/Frontend/Full Stack Agevoluzione",
+        "company": "ALLIBO",
+        "location": "Milano",
+        "salary": null,
+        "url": "https://it.trabajo.org/offerta-2213-b9ee493fac7d21538a584addb8e8ca2b",
+        "description": "TIPOLOGIA DI CONTRATTO: DETERMINATO/ INDETERMINATOSEDE DI LAVORO: SESTO S. GIOVANNI (MI)La risorsa sarà inserita presso Agevoluzione S.R.L.S., azienda operante nel settore dell'innovazione tecnologica e dello sviluppo software, e si occuperà delle seguenti attività:- Analizzare i requisiti funzional",
+        "requirements": [
+          "C#",
+          ".NET",
+          "REST API",
+          "Web applications",
+          "Desktop applications"
+        ]
+      },
+      "matchScore": 53,
+      "matchDetails": {
+        "matched_skills": [
+          "REST API",
+          "Web applications"
+        ],
+        "missing_skills": [
+          "C#",
+          ".NET",
+          "Desktop applications"
+        ],
+        "skills_fit": 40,
+        "role_fit": 50,
+        "seniority_fit": 70,
+        "location_fit": 100,
+        "reason": "The candidate matches the REST API and general web development aspects but lacks the core C#/.NET and desktop development skills required; they are a frontend specialist, so role fit is moderate, while seniority and location align well."
+      }
+    },
+    {
+      "jobPost": {
+        "id": "WjVOSlljSF8tampsV3N3NUFBQUFBQT09OkVzd0JDb3dCUVVSRVlsZGxXWGN4TjNKTWMxTnlTRnBRUTA5SFkyRkJNR0UyWHpkSlVrVnZNRzEyZEVWVGFVMTRPRlpaUVhodGJsOWZiamRYYVdGa1ozUlFkR1ozUVhJNVZqbFFNVzFOUVhCR00yb3lTVTluY0ZKeWVuVndkRmRQVUd0ZlFtUmhjbWhuTkdrd2FscHRhVkZ0TVRWQmEweFlOVEZ5Vm1kME1rSmphWEF6WjFOa1NqWlNNbGxZVHpoVWQxQVNGM1JuVEhWaGRqTmZSRWwyVW5kamMxQjRjRmRuTkZGakdpSkJTRTR3UlRkR09WUkpVMUpTY0hac1NFNW9ZUzFoTkdoMWJqbDNaMEZ4V0VOMw",
+        "role": "Front End Developer Senior – Full Remote, Progetti Bancari",
+        "company": "ATON IT",
+        "location": "Milano",
+        "salary": null,
+        "url": "https://it.trabajo.org/offerta-3975-6ace4444c3661fba5892343e86609023",
+        "description": "ATON IT è alla ricerca di un Front End Developer di livello middle/senior per un progetto bancario europeo, con sede a Roma o Milano e disponibilità al lavoro da remoto completo. Sono richieste trasferte trimestrali di 3–4 giorni in altri stati europei.\nIl candidato ideale possiede Angular e TypeScr",
+        "requirements": [
+          "Angular",
+          "TypeScript",
+          "Unit Testing",
+          "End-to-End Testing",
+          "GitLab",
+          "Jira",
+          "Confluence",
+          "English"
+        ]
+      },
+      "matchScore": 51,
+      "matchDetails": {
+        "matched_skills": [
+          "TypeScript",
+          "Unit Testing"
+        ],
+        "missing_skills": [
+          "Angular",
+          "End-to-End Testing",
+          "GitLab",
+          "Jira",
+          "Confluence",
+          "English"
+        ],
+        "skills_fit": 25,
+        "role_fit": 70,
+        "seniority_fit": 75,
+        "location_fit": 100,
+        "reason": "The candidate matches only TypeScript and unit testing out of eight key requirements, giving a low skills fit. Their front‑end background and 4 years of experience align reasonably with a middle/senior role, and they are located in Milano, matching the remote job location."
+      }
+    },
+    {
+      "jobPost": {
+        "id": "TlVyTjFNSXkzS0ltUE1RckFBQUFBQT09OkVzd0JDb3dCUVVSRVlsZGxZVFZCZFdoS2VsbDNjVlJQY0VaVGJ6QnBXR3RJV25WdFlWVlphWFV3UW5OTVZXOW9SR3MxUWxsbE5FRlJhbVpTYWxNeWRsTk5iM1p3UWs5SVNTMDNZVEJFVWxKdU5rbE9PRWRUU1haR2NqbHFPWEZTTlhNNWMwOXdNVEJtWkVaSGRGWk9hMmd5TW1WMmFGcFhhbnBPZUVoTGNqbGpXVTVqYTI1SGFTMVhWa0YxZDNKVFMyNFNGM1JuVEhWaGRqTmZSRWwyVW5kamMxQjRjRmRuTkZGakdpSkJTRTR3UlRkRk1HbHdkMWRWUjFGVllVMVFXVGxPV1RKcFMzcDBWbUp4YmpGQg",
+        "role": "Front-End Engineer: Angular/Vue | Flexible Hours & Training",
+        "company": "Bitrock",
+        "location": "Milano MI",
+        "salary": null,
+        "url": "https://it.jooble.org/jdp/-7780469123129474152",
+        "description": "Bitrock in Milan, Lombardy, Italy is looking for a Front-End Developer skilled in Angular and Vue.js to join a dynamic team. You will work on modern web interfaces, implement components and integrate with APIs, with opportunities to learn and grow.\nWe value testers and collaboration; you will contri",
+        "requirements": [
+          "Angular",
+          "Vue.js",
+          "AngularJS",
+          "D3.js",
+          "TypeScript"
+        ]
+      },
+      "matchScore": 47,
+      "matchDetails": {
+        "matched_skills": [
+          "TypeScript"
+        ],
+        "missing_skills": [
+          "Angular",
+          "Vue.js",
+          "AngularJS",
+          "D3.js"
+        ],
+        "skills_fit": 20,
+        "role_fit": 60,
+        "seniority_fit": 80,
+        "location_fit": 100,
+        "reason": "The candidate matches only the TypeScript requirement and lacks the core Angular/Vue/D3.js skills, resulting in low skills fit, while the role and location are a good match."
+      }
+    }
+  ]
+}

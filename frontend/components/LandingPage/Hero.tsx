@@ -75,13 +75,13 @@ export default function Hero() {
                 Get started 
               </Button>
             </Link>
-            <Link href="#how-it-works">
+            <Link href="/demo">
             <Button
               size="lg"
               variant="outline"
               className="border-slate-500 hover:bg-slate-700/20 dark:hover:bg-slate-800 dark:border-slate-300 w-full rounded-lg transition-colors text-lg tracking-tight cursor-pointer py-6 px-8 duration-300"
             >
-                See how it works
+                See a sample report
               </Button>
             </Link>
           </motion.div>

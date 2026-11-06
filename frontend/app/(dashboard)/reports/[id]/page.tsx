@@ -1,8 +1,8 @@
 'use client'
 
 import JobPostCardItem from "@/components/Dashboard/JobPostCardItem";
-import { useQuery, useQueries } from "@tanstack/react-query";
-import { getJobPostsForReport, getMatchScoreForJobPost, getUserSubscription } from "@/utils/supabase/actions/userActions";
+import { useQuery } from "@tanstack/react-query";
+import { getJobPostsForReport, getMatchScoresForReport, getUserSubscription } from "@/utils/supabase/actions/userActions";
 import { useUser } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -29,30 +29,28 @@ const JobPost = () => {
         enabled: !!reportId,
     });
 
-    const matchScoreQueries = useQueries({
-        queries: jobPosts?.map((jobPost) => ({
-            queryKey: ["matchScore", jobPost.id, reportId],
-            queryFn: () => getMatchScoreForJobPost({
-                jobPostId: jobPost.id,
-                jobReportId: reportId,
-                userId: user?.id || ""
-            }),
-            enabled: !!jobPost.id && !!reportId && !!user?.id,
-        })) || [],
+    const { data: matchScores, isPending: isLoadingScores } = useQuery({
+        queryKey: ["matchScores", reportId],
+        queryFn: () => getMatchScoresForReport({ reportId }),
+        enabled: !!reportId && !!user?.id,
     });
 
-    // Verifica se tutte le query match score sono ancora in caricamento
-    const isLoadingScores = matchScoreQueries.some(query => query.isLoading);
-
-    // Combiniamo i job posts con i match scores
+    // Combiniamo i job posts con i match scores, dal migliore al peggiore
     const jobsWithScores = useMemo(() => {
-        if (!jobPosts || isLoadingScores) return [];
-        return jobPosts.map((jobPost, index) => ({
-            jobPost,
-            matchScore: matchScoreQueries[index]?.data?.score ?? 0,
-            isBlurred: !isPro && index >= 3, // Non blurrare se l'utente è pro
-        }));
-    }, [jobPosts, matchScoreQueries, isLoadingScores, isPro]);
+        if (!jobPosts) return [];
+        const scoresByPost = new Map((matchScores ?? []).map((matchScore) => [matchScore.job_post_id, matchScore]));
+        return jobPosts
+            .map((jobPost) => ({
+                jobPost,
+                matchScore: scoresByPost.get(jobPost.id)?.score ?? 0,
+                matchDetails: scoresByPost.get(jobPost.id)?.details ?? null,
+            }))
+            .sort((a, b) => b.matchScore - a.matchScore)
+            .map((job, index) => ({
+                ...job,
+                isBlurred: !isPro && index >= 3, // I free vedono i 3 migliori, non blurrare se l'utente è pro
+            }));
+    }, [jobPosts, matchScores, isPro]);
 
     if (!reportId) {
         return (
@@ -82,12 +80,13 @@ const JobPost = () => {
                         <p className="text-red-500">Error loading job posts</p>
                     </div>
                 ) : (
-                    jobsWithScores.map(({ jobPost, matchScore, isBlurred }) => (
+                    jobsWithScores.map(({ jobPost, matchScore, matchDetails, isBlurred }) => (
                         <JobPostCardItem
                             key={jobPost.id}
                             jobPost={jobPost}
                             isBlurred={isBlurred}
                             matchScore={matchScore}
+                            matchDetails={matchDetails}
                         />
                     ))
                 )}

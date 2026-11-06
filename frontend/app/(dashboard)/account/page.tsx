@@ -81,10 +81,7 @@ function Account() {
     
     setIsLoadingCheckout(true);
     try {
-      const response = await axios.post('/api/stripe/create-checkout-session', {
-        userId: user.id,
-        priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID
-      });
+      const response = await axios.post('/api/stripe/create-checkout-session');
       
       window.location.href = response.data.url;
     } catch (error) {
@@ -103,9 +100,7 @@ function Account() {
     
     setIsLoadingCheckout(true);
     try {
-      const response = await axios.post('/api/stripe/create-portal-session', {
-        userId: user.id
-      });
+      const response = await axios.post('/api/stripe/create-portal-session');
       
       window.location.href = response.data.url;
     } catch (error) {

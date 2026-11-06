@@ -1,15 +1,17 @@
 import { stripe } from "@/utils/stripe/stripe";
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
-    const { userId } = await req.json();
+    // The user comes from the Clerk session, never from the request body
+    const { userId } = await auth();
 
     if (!userId) {
       return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 }
+        { error: "Unauthorized" },
+        { status: 401 }
       );
     }
 

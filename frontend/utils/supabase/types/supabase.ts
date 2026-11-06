@@ -153,6 +153,7 @@ export type Database = {
       match_scores: {
         Row: {
           created_at: string | null
+          details: Json | null
           id: string
           job_post_id: string
           job_report_id: string | null
@@ -161,6 +162,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          details?: Json | null
           id?: string
           job_post_id: string
           job_report_id?: string | null
@@ -169,6 +171,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          details?: Json | null
           id?: string
           job_post_id?: string
           job_report_id?: string | null

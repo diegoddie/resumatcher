@@ -18,12 +18,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner"
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserSubscription } from "@/utils/supabase/actions/userActions";
 
 function UploadCv() {
   const { user } = useUser();
+  const { getToken } = useAuth();
   const queryClient = useQueryClient();
 
   const {
@@ -87,12 +88,12 @@ function UploadCv() {
     
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('user_id', user?.id || "");
     
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/summarize`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${await getToken()}`,
         },
       });
 
@@ -139,17 +140,18 @@ function UploadCv() {
     try {
       // Crea l'oggetto JobSearchRequest come richiesto dal backend
       const jobSearchRequest = {
-        user_id: user?.id || "",
         role: cvData.role,
         location: cvData.location,
         skills: cvData.skills, // Passa l'array direttamente
         years_experience: cvData.years_experience || 0,
+        summary: cvData.summary,
         filename: file.name || "uploaded_cv.pdf"
       };
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/search`, jobSearchRequest, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${await getToken()}`,
         },
       });
 
@@ -165,7 +167,7 @@ function UploadCv() {
           duration: 4000,
         });
         setTimeout(() => {
-          router.push("/reports");
+          router.push(`/reports/${response.data.job_report_id}`);
         }, 1000);
       }
     } catch (err) {

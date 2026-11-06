@@ -12,6 +12,7 @@ CREATE TABLE users (
   first_name TEXT,
   last_name TEXT,
   avatar_url TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE
 );
@@ -44,6 +45,7 @@ CREATE TABLE public.job_posts (
 CREATE TABLE match_scores (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   score INT NOT NULL,
+  details JSONB, -- LLM assessment: sub-scores, matched/missing skills, reason
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   job_post_id UUID NOT NULL REFERENCES job_posts(id) ON DELETE CASCADE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -61,6 +63,8 @@ CREATE TABLE public.subscriptions (
   end_date TIMESTAMP WITH TIME ZONE,
   payment_provider TEXT,
   payment_id TEXT,
+  stripe_customer_id TEXT,
+  stripe_subscription_id TEXT,
   credits INT NOT NULL DEFAULT 3
 );
 

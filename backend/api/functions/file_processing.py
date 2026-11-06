@@ -1,28 +1,31 @@
 import io
 import re
 from fastapi import UploadFile
-import PyPDF2
 import docx
+from pypdf import PdfReader
 from fastapi import HTTPException
 
-def extract_text_from_pdf(file: UploadFile) -> str:
-    reader = PyPDF2.PdfReader(file.file)
-    text = "".join(page.extract_text() or "" for page in reader.pages)
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB, same limit as the frontend
+
+def extract_text_from_pdf(content: bytes) -> str:
+    reader = PdfReader(io.BytesIO(content))
+    text = "\n".join(page.extract_text() or "" for page in reader.pages)
     return text.strip()
 
-def extract_text_from_docx(file: UploadFile) -> str:
-    doc = docx.Document(io.BytesIO(file.file.read()))
-    text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
-    return text.strip()
+def extract_text_from_docx(content: bytes) -> str:
+    doc = docx.Document(io.BytesIO(content))
+    paragraphs = [paragraph.text for paragraph in doc.paragraphs]
+    # Many CV templates lay out the content in tables
+    cells = [cell.text for table in doc.tables for row in table.rows for cell in row.cells]
+    return "\n".join(paragraphs + cells).strip()
 
 def clean_text(text: str) -> str:
     text = re.sub(r'\s+', ' ', text)
     text = ''.join(c for c in text if c.isprintable() or c.isspace())
     text = re.sub(r'Page \d+ of \d+', '', text)
-    text = text.replace('\r', '\n')
     return text.strip()
 
-async def process_cv(file: UploadFile) -> str:
+def process_cv(file: UploadFile) -> str:
     if not file.filename:
         raise HTTPException(status_code=400, detail="File not valid or not provided")
 
@@ -30,33 +33,16 @@ async def process_cv(file: UploadFile) -> str:
     if file_extension not in ['pdf', 'docx']:
         raise HTTPException(status_code=400, detail="Only PDF or DOCX files are supported")
 
+    content = file.file.read(MAX_FILE_SIZE + 1)
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=413, detail="File must be smaller than 5MB")
+
     try:
-        if file.content_type == "application/pdf":
-            text = extract_text_from_pdf(file)
-        else:
-            text = extract_text_from_docx(file)
-        return clean_text(text)
+        text = extract_text_from_pdf(content) if file_extension == "pdf" else extract_text_from_docx(content)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing CV: {e}")
-    
-def get_job_experience(description: str) -> int | None:
-    if not description:
-        return 0
-    
-    description = description.lower()
-    
-    patterns = [
-        r"(\d+)\+?\s*years?\s*(?:of)?\s*experience",
-        r"experience\s*(?:of|:)?\s*(\d+)\+?\s*years?",
-        r"at\s*least\s*(\d+)\s*years?\s*(?:of)?\s*experience",
-        r"minimum\s*(?:of)?\s*(\d+)\s*years?\s*experience",
-        r"(\d+)\+?\s*anni\s*(?:di)?\s*esperienza",
-        r"esperienza\s*(?:di|:)?\s*(\d+)\+?\s*anni"
-    ]
-    
-    for pattern in patterns:
-        match = re.search(pattern, description)
-        if match:
-            return int(match.group(1))
-    
-    return None
+        raise HTTPException(status_code=400, detail=f"Error processing CV: {e}")
+
+    text = clean_text(text)
+    if not text:
+        raise HTTPException(status_code=400, detail="No text found in the CV (scanned PDFs are not supported)")
+    return text

@@ -15,8 +15,20 @@ export type UserCreditsInfo = {
     stripe_subscription_id?: string;
 };
 
+export type MatchDetails = {
+    skills_fit: number;
+    role_fit: number;
+    seniority_fit: number;
+    location_fit: number;
+    matched_skills: string[];
+    missing_skills: string[];
+    reason: string;
+}
+
 export type MatchScoreInfo = {
+    job_post_id: string;
     score: number;
+    details: MatchDetails | null;
 }
 
 export type JobReportInfo = {
@@ -34,7 +46,7 @@ export type JobPostInfo = {
     role: string;
     location: string;
     description: string;
-    salary: string;
+    salary: string | null;
     requirements: string[];
     url: string;
 }

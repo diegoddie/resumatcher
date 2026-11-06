@@ -90,32 +90,25 @@ export async function getJobPostsForReport({ reportId }: { reportId: string }): 
     }
 }
 
-export async function getMatchScoreForJobPost({ jobPostId, jobReportId, userId }: { jobPostId: string, jobReportId: string, userId: string }): Promise<MatchScoreInfo | null>{
-    if (!jobPostId || !jobReportId || !userId) {
-        console.error("Missing required parameters:", { jobPostId, jobReportId, userId });
-        return null;
-    }
-    
+export async function getMatchScoresForReport({ reportId }: { reportId: string }): Promise<MatchScoreInfo[] | null> {
+    if (!reportId) return null;
     try {
         const client = await createClerkSupabaseClientSsr();
 
-        // Prima verifichiamo se esiste un match score con questi parametri
+        // RLS limits the rows to the current user's scores
         const { data, error } = await client
             .from("match_scores")
-            .select("score")
-            .eq("job_post_id", jobPostId)
-            .eq("job_report_id", jobReportId)
-            .eq("user_id", userId)
-            .single();
+            .select("job_post_id, score, details")
+            .eq("job_report_id", reportId);
 
         if (error) {
-            console.error("Error fetching match score:", error);
+            console.error("Error fetching match scores:", error);
             return null;
         }
 
-        return data;
+        return data as MatchScoreInfo[];
     } catch (e) {
-        console.error("Exception fetching match score:", e);
+        console.error("Exception fetching match scores:", e);
         return null;
     }
 }

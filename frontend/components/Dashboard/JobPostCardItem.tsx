@@ -1,25 +1,32 @@
 import {
   BriefcaseIcon,
+  CheckIcon,
   ExternalLinkIcon,
   LockIcon,
   MapPinIcon,
+  XIcon,
 } from "lucide-react";
 import { CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { JobPostInfo } from "@/utils/supabase/types/types";
+import { JobPostInfo, MatchDetails } from "@/utils/supabase/types/types";
 import Link from "next/link";
 
 function JobPostCardItem({
   jobPost,
   isBlurred,
   matchScore,
+  matchDetails,
 }: {
   jobPost: JobPostInfo;
   isBlurred: boolean;
   matchScore: number;
+  matchDetails: MatchDetails | null;
 }) {
+  // Reports created before the LLM assessment have no details: show the plain requirements
+  const showDetails = !isBlurred && !!matchDetails;
+
   const getScoreColor = (matchScore: number) => {
     if (matchScore >= 90) return "text-green-500";
     if (matchScore >= 75) return "text-emerald-500";
@@ -97,16 +104,46 @@ function JobPostCardItem({
           <div className="text-sm text-foreground tracking-tight">
             {truncateText(jobPost.description || "", 100)}
           </div>
+          {showDetails && matchDetails.reason && (
+            <p className="text-sm text-foreground tracking-tight italic">
+              {matchDetails.reason}
+            </p>
+          )}
           <div className="flex flex-wrap gap-2">
-            {jobPost.requirements?.map((req, index) => (
-              <Badge
-                key={index}
-                variant="secondary"
-                className="bg-gray-100 dark:bg-slate-800 px-2 py-1 rounded-md text-sm text-gray-700 dark:text-slate-300 tracking-tight"
-              >
-                {req}
-              </Badge>
-            ))}
+            {showDetails ? (
+              <>
+                {matchDetails.matched_skills.map((skill, index) => (
+                  <Badge
+                    key={`matched-${index}`}
+                    variant="secondary"
+                    className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 px-2 py-1 rounded-md text-sm text-emerald-700 dark:text-emerald-400 tracking-tight"
+                  >
+                    <CheckIcon className="h-3 w-3" />
+                    {skill}
+                  </Badge>
+                ))}
+                {matchDetails.missing_skills.map((skill, index) => (
+                  <Badge
+                    key={`missing-${index}`}
+                    variant="outline"
+                    className="border-dashed border-slate-400 px-2 py-1 rounded-md text-sm text-gray-500 dark:text-slate-400 tracking-tight"
+                  >
+                    <XIcon className="h-3 w-3" />
+                    {skill}
+                  </Badge>
+                ))}
+              </>
+            ) : (
+              jobPost.requirements?.map((req, index) => (
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="bg-gray-100 dark:bg-slate-800 px-2 py-1 rounded-md text-sm text-gray-700 dark:text-slate-300 tracking-tight"
+                >
+                  {req}
+                </Badge>
+              ))
+            )}
           </div>
           <div className="flex items-center justify-end">
             <div className="flex gap-2">

@@ -27,7 +27,7 @@ Resumatcher bridges the gap between job seekers and opportunities by going beyon
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Framework**: Next.js 14 with TypeScript
+- **Framework**: Next.js 15 (App Router) with TypeScript
 - **Styling**: TailwindCSS with ShadcnUI components
 - **State Management**: TanStack Query for server state
 - **Animation**: Framer Motion for smooth UI transitions
@@ -35,106 +35,125 @@ Resumatcher bridges the gap between job seekers and opportunities by going beyon
 - **Payment Processing**: Stripe for subscription management
 
 ### Backend
-- **API**: Python FastAPI application
-- **AI Processing**: 
-  - Sentence Transformers for semantic text analysis
-  - OpenAI API for resume summarization
-  - Hugging Face models for content analysis
+- **API**: Python FastAPI application, authenticated with Clerk session tokens
+- **AI Processing**: `gpt-oss-120b` on the Groq free tier (OpenAI-compatible API) with structured outputs, for CV analysis and match assessment
+- **Jobs source**: JSearch API (RapidAPI)
 - **Database**: PostgreSQL with Supabase
-- **Deployment**: Docker containerization
+- **Deployment**: Vercel Functions (a Dockerfile is included for running it anywhere else)
 
 ## 🔧 Architecture
 
-Resumatcher follows a modern cloud-native architecture:
-
 1. **User Flow**:
-   - User uploads resume
-   - AI analyzes and extracts key information
-   - System fetches job listings from external APIs
-   - Backend calculates match scores using vector similarity
-   - Results are presented in an intuitive UI with filtering options
+   - User uploads resume (PDF or DOCX)
+   - AI extracts role, experience, location, skills and a summary, the user reviews them
+   - System fetches job listings posted in the last month from JSearch
+   - An LLM rates each job against the profile and the backend computes the match score
+   - Results are shown sorted by score, with matched/missing skills and a short explanation
 
-2. **Processing Pipeline**:
-   - Document parsing (`python-docx`, `PyPDF2`)
-   - Text preprocessing and normalization
-   - Vector embedding generation using Sentence Transformers
-   - Batch processing for efficient job matching
-   - Real-time scoring and sorting
+2. **Matching Pipeline** (`backend/main.py`):
+   - CV analysis: text extracted from PDF (`pypdf`) or DOCX (`python-docx`), then the LLM extracts the profile
+   - One LLM call per job post: it extracts the requirements (max 8 hard skills, cached in `job_posts`) and rates `skills_fit`, `role_fit`, `seniority_fit`, `location_fit` (0-100), listing matched/missing skills
+   - Final score = weighted sum of the sub-scores (`backend/api/functions/scoring.py`), stored with the details in `match_scores`
+   - Free tier limits (tokens per minute): 2 LLM calls in parallel with automatic retries, a search takes 1-2 minutes, max 10 searches per day overall
+
+3. **Sample report**: `/demo` shows a report generated once for a sample CV (`frontend/lib/demo/demo-report.json`), with no login and no AI usage
 
 ## 💻 Development Setup
 
-### Frontend
-
-```bash
-# Navigate to frontend directory
-cd frontend
-
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
-```
-
 ### Backend
 
+Uses [uv](https://docs.astral.sh/uv/): it installs the Python version pinned in `.python-version` and the exact dependencies in `uv.lock`.
+
 ```bash
-# Navigate to backend directory
+# Install uv (once)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 cd backend
+uv sync
 
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# Windows:
-venv\Scripts\activate
-# macOS/Linux:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run development server
-uvicorn main:app --reload
+# Run development server on http://localhost:8000
+uv run uvicorn main:app --reload
 ```
+
+Add a dependency with `uv add <package>` (updates `pyproject.toml` and `uv.lock`).
+
+### Frontend
+
+Uses pnpm (via corepack, bundled with Node.js).
+
+```bash
+cd frontend
+corepack pnpm install
+
+# Run development server on http://localhost:3000
+corepack pnpm dev
+```
+
+New users are created in Supabase by the Clerk webhook (`/api/clerk/webhooks`), which can't reach localhost: to sign up a new user locally expose port 3000 with a tunnel (e.g. ngrok) and point the Clerk dev webhook to it, or sign in with a user that already exists in the database.
+
+### Database
+
+The schema is in `frontend/utils/sql/snippets.sql`. Migrations to apply on an existing database (Supabase SQL editor) are in `backend/migrations/`.
+
+### Clerk ↔ Supabase
+
+The frontend reads Supabase with the Clerk session token (Supabase third-party auth, no JWT template). For each Clerk instance (development and production):
+
+1. Clerk Dashboard → **Integrations → Supabase** → *Activate Supabase integration*: session tokens get the `role: "authenticated"` claim, and the page shows the Clerk domain.
+2. Supabase Dashboard → **Authentication → Sign In / Providers → Third-Party Auth** → *Add provider* → **Clerk**, with that domain. One Supabase project can trust both the development and the production Clerk domains.
+
+RLS policies match `auth.jwt()->>'sub'` (via `requesting_user_id()`) with the Clerk user id.
 
 ### Environment Variables
 
-The project requires several environment variables to function properly:
-
-**Frontend (.env.local)**
+**Frontend (`frontend/.env`)**
 ```
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_*****
 CLERK_SECRET_KEY=sk_*****
+SIGNING_SECRET=whsec_*****            # Clerk webhook signing secret
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=*****
-NEXT_PUBLIC_STRIPE_PRICE_ID=price_*****
+NEXT_PUBLIC_SUPABASE_KEY=*****        # anon key
+SUPABASE_SERVICE_ROLE_KEY=*****
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_*****
 STRIPE_SECRET_KEY=sk_*****
+STRIPE_WEBHOOK_SECRET=whsec_*****
+NEXT_PUBLIC_STRIPE_PRICE_ID=price_*****
 ```
 
-**Backend (.env)**
+**Backend (`backend/.env`)**
 ```
-OPENAI_API_KEY=sk-*****
-HUGGINGFACE_TOKEN=hf_*****
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=*****
+GROQ_API_KEY=gsk_*****
+LLM_MODEL=openai/gpt-oss-120b         # optional
+MAX_SEARCHES_PER_DAY=10               # optional, all users
 RAPIDAPI_KEY=*****
+JOBS_COUNTRY=it                       # optional, JSearch country
+JOBS_DATE_POSTED=month                # optional: all, today, 3days, week, month
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=*****
+CLERK_JWKS_URL=https://<your-clerk-frontend-api>/.well-known/jwks.json
+CRON_SECRET=*****                     # production only, set by Vercel cron
 ```
 
 ## 🚢 Deployment
 
-Resumatcher is deployed using:
+Everything runs on free tiers:
 
-- **Frontend**: Vercel for the Next.js application
-- **Backend**: Railway for the containerized FastAPI service
-- **Database**: Supabase for PostgreSQL hosting
+- **Frontend**: Vercel project with root directory `frontend`
+- **Backend**: Vercel project with root directory `backend` (FastAPI is detected from `main.py`, dependencies installed from `uv.lock`)
+- **Database**: Supabase. A daily Vercel cron (`backend/vercel.json`) calls `/keepalive` so the free project is never paused for inactivity
+- **AI**: Groq free tier
 
 For production deployment:
 
-1. Set up Railway by connecting to your GitHub repository
-2. Configure environment variables
-3. Set up a production Supabase project
-4. Deploy the frontend to Vercel
+1. Import the repository twice in Vercel, with root directories `frontend` and `backend`
+2. Configure the environment variables of both projects (backend: the list above plus `CRON_SECRET`; frontend: `NEXT_PUBLIC_BACKEND_URL` = backend URL)
+3. Set up Clerk ↔ Supabase (see above) and apply `backend/migrations/`
 
 ---
 
